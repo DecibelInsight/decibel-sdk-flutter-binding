@@ -10,7 +10,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
 
 /** DecibelSdkPlugin */
-class DecibelSdkPlugin: FlutterPlugin, MethodCallHandler {
+class DecibelSdkPlugin: FlutterPlugin, Messages.DecibelSdkApi {
   /// The MethodChannel that will the communication between Flutter and native Android
   ///
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -18,19 +18,14 @@ class DecibelSdkPlugin: FlutterPlugin, MethodCallHandler {
   private lateinit var channel : MethodChannel
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "decibel_sdk")
-    channel.setMethodCallHandler(this)
-  }
-
-  override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-    if (call.method == "getPlatformVersion") {
-      result.success("Android ${android.os.Build.VERSION.RELEASE}")
-    } else {
-      result.notImplemented()
-    }
+    Messages.DecibelSdkApi.setup(flutterPluginBinding.binaryMessenger, this)
   }
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-    channel.setMethodCallHandler(null)
+    Messages.DecibelSdkApi.setup(binding.binaryMessenger, null)
+  }
+
+  override fun initialize() {
+    TODO("Not yet implemented")
   }
 }
