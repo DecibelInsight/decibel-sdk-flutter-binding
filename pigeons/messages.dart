@@ -23,13 +23,17 @@ class ConsentsMessage {
   List<int>? consents;
 }
 
+class ScreenshotMessage {
+  Uint8List? screenshotData;
+}
+
 @HostApi()
 abstract class DecibelSdkApi {
   void initialize(SessionMessage msg);
   void setScreen(ScreenMessage msg);
-  void uiChanged();
   void setEnableConsents(ConsentsMessage msg);
   void setDisableConsents(ConsentsMessage msg);
+  void sendScreenshot(ScreenshotMessage msg);
 }
 
 void configurePigeon(PigeonOptions opts) {
