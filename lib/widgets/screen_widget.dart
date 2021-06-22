@@ -29,7 +29,6 @@ class _ScreenWidgetState extends State<ScreenWidget> {
   @override
   Widget build(BuildContext context) {
     var route = ModalRoute.of(context);
-
     // Defining an internal function to be able to remove the listener
     void handler(status) {
       if (status == AnimationStatus.completed) {
