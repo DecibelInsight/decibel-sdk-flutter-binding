@@ -26,14 +26,12 @@ public class SwiftDecibelSdkPlugin: NSObject, FlutterPlugin, FLTDecibelSdkApi {
 
     public func setEnableConsents(_ input: FLTConsentsMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         if let consents = input.consents as? [Int] {
-            print(consents)
             DecibelSDK.shared.setEnableConsents(consents)
         }
     }
 
     public func setDisableConsents(_ input: FLTConsentsMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         if let consents = input.consents as? [Int] {
-            print(consents)
             DecibelSDK.shared.setDisableConsents(consents)
         }
     }

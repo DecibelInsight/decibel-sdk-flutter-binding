@@ -70,22 +70,29 @@ class SessionReplay {
         recorder, Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()));
     final image =
         await (context.findRenderObject() as RenderRepaintBoundary).toImage();
-
     canvas.drawImage(image, _offset, _paintEmpty);
     // Paint a rect in the widgets position to be masked
+    final _previousBoundsList = List<Rect>.empty(growable: true);
     widgetsToMaskList.forEach((globalKey) {
-      if (globalKey.globalPaintBounds != null) {
-        canvas.drawRect(globalKey.globalPaintBounds!, _paintBlue);
-      }
+      globalKey.globalPaintBounds?.let((it) {
+        _previousBoundsList.add(it);
+        canvas.drawRect(it, _paintBlue);
+      });
     });
     final resultImage =
         await recorder.endRecording().toImage(width.toInt(), height.toInt());
     final resultImageData =
         await resultImage.toByteData(format: ui.ImageByteFormat.png);
-    if (resultImageData != null) {
+
+    final _nextBoundsList = List<Rect>.empty(growable: true);
+    widgetsToMaskList.forEach((globalKey) {
+      globalKey.globalPaintBounds?.let((it) {
+        _nextBoundsList.add(it);
+      });
+    });
+    if (resultImageData != null && listEquals(_previousBoundsList, _nextBoundsList)) {
       await decibelSdkApi.sendScreenshot(ScreenshotMessage()
         ..screenshotData = resultImageData.buffer.asUint8List());
     }
-    print("Screenshot // maskListSize:" + widgetsToMaskList.length.toString());
   }
 }

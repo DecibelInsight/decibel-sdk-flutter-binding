@@ -29,3 +29,7 @@ extension ListDecibelCustomerConsentTypeExt on List<DecibelCustomerConsentType> 
     return this.map((consent) => consent.index).toList();
   }
 }
+
+extension ObjectExt<T> on T {
+  R let<R>(R Function(T it) op) => op(this);
+}
