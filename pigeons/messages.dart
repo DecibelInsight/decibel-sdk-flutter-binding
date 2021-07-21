@@ -27,6 +27,27 @@ class ScreenshotMessage {
   Uint8List? screenshotData;
 }
 
+class DimensionStringMessage {
+  String? dimensionName;
+  String? value;
+}
+
+class DimensionNumberMessage {
+  String? dimensionName;
+  double? value;
+}
+
+class DimensionBoolMessage {
+  String? dimensionName;
+  bool? value;
+}
+
+class GoalMessage {
+  String? goal;
+  double? value;
+  int? currency;
+}
+
 @HostApi()
 abstract class DecibelSdkApi {
   void initialize(SessionMessage msg);
@@ -34,6 +55,10 @@ abstract class DecibelSdkApi {
   void setEnableConsents(ConsentsMessage msg);
   void setDisableConsents(ConsentsMessage msg);
   void sendScreenshot(ScreenshotMessage msg);
+  void sendDimensionWithString(DimensionStringMessage msg);
+  void sendDimensionWithNumber(DimensionNumberMessage msg);
+  void sendDimensionWithBool(DimensionBoolMessage msg);
+  void sendGoal(GoalMessage msg);
 }
 
 void configurePigeon(PigeonOptions opts) {
