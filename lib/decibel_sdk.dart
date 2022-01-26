@@ -1,28 +1,17 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:decibel_sdk/features/session_replay.dart';
-import 'package:decibel_sdk/extensions.dart';
+import 'package:decibel_sdk/utility/extensions.dart';
 import 'package:flutter/material.dart';
 import 'messages.dart';
-
-/// Types of Customer Consent
-enum DecibelCustomerConsentType {
-  /// All consents
-  all,
-  /// Only Session Replay and tracking
-  recordingAndTracking,
-  /// Only tracking
-  tracking,
-  /// No consents
-  none
-}
+import 'utility/enums.dart';
 
 /// DecibelSdk main class
 class DecibelSdk {
   static DecibelSdkApi? _apiInstance;
   static GlobalKey? captureKey;
   static bool isPageTransitioning = false;
+  static String lastVisitedScreen = '';
 
   static DecibelSdkApi get _api {
     return _apiInstance ??= DecibelSdkApi();
@@ -50,6 +39,7 @@ class DecibelSdk {
   /// Set the name of the page to track
   static Future<void> setScreen(String screenName) async {
     await _api.setScreen(ScreenMessage()..screenName = screenName);
+    print("SetScreen $screenName");
   }
 
   /// Enable the Customer Consents list passed as parameter
@@ -106,183 +96,9 @@ class DecibelSdk {
       ..currency = currency?.index;
     await _api.sendGoal(goal);
   }
-}
 
-/// Decibel currency
-enum DecibelCurrency {
-  AED,
-  AFN,
-  ALL,
-  AMD,
-  ANG,
-  AOA,
-  ARS,
-  AUD,
-  AWG,
-  AZN,
-  BAM,
-  BBD,
-  BDT,
-  BGN,
-  BHD,
-  BIF,
-  BMD,
-  BND,
-  BOB,
-  BOV,
-  BRL,
-  BSD,
-  BTN,
-  BWP,
-  BYN,
-  BZD,
-  CAD,
-  CDF,
-  CHE,
-  CHF,
-  CHW,
-  CLF,
-  CLP,
-  CNY,
-  COP,
-  COU,
-  CRC,
-  CUC,
-  CUP,
-  CVE,
-  CZK,
-  DJF,
-  DKK,
-  DOP,
-  DZD,
-  EGP,
-  ERN,
-  ETB,
-  EUR,
-  FJD,
-  FKP,
-  GBP,
-  GEL,
-  GHS,
-  GIP,
-  GMD,
-  GNF,
-  GTQ,
-  GYD,
-  HKD,
-  HNL,
-  HRK,
-  HTG,
-  HUF,
-  IDR,
-  ILS,
-  INR,
-  IQD,
-  IRR,
-  ISK,
-  JMD,
-  JOD,
-  JPY,
-  KES,
-  KGS,
-  KHR,
-  KMF,
-  KPW,
-  KRW,
-  KWD,
-  KYD,
-  KZT,
-  LAK,
-  LBP,
-  LKR,
-  LRD,
-  LSL,
-  LYD,
-  MAD,
-  MDL,
-  MGA,
-  MKD,
-  MMK,
-  MNT,
-  MOP,
-  MRU,
-  MUR,
-  MVR,
-  MWK,
-  MXN,
-  MXV,
-  MYR,
-  MZN,
-  NAD,
-  NGN,
-  NIO,
-  NOK,
-  NPR,
-  NZD,
-  OMR,
-  PAB,
-  PEN,
-  PGK,
-  PHP,
-  PKR,
-  PLN,
-  PYG,
-  QAR,
-  RON,
-  RSD,
-  RUB,
-  RWF,
-  SAR,
-  SBD,
-  SCR,
-  SDG,
-  SEK,
-  SGD,
-  SHP,
-  SLL,
-  SOS,
-  SRD,
-  SSP,
-  STN,
-  SVC,
-  SYP,
-  SZL,
-  THB,
-  TJS,
-  TMT,
-  TND,
-  TOP,
-  TRY,
-  TTD,
-  TWD,
-  TZS,
-  UAH,
-  UGX,
-  USD,
-  USN,
-  UYI,
-  UYU,
-  UYW,
-  UZS,
-  VES,
-  VND,
-  VUV,
-  WST,
-  XAF,
-  XAG,
-  XAU,
-  XCD,
-  XDR,
-  XOF,
-  XPD,
-  XPF,
-  XPT,
-  XSU,
-  XTS,
-  XUA,
-  XXX,
-  YER,
-  ZAR,
-  ZMW,
-  ZWL
+  ///Listener for tabBar change of tab
+  static void tabControllerListener(TabController tabController) {
+    isPageTransitioning = tabController.indexIsChanging;
+  }
 }

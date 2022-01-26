@@ -1,6 +1,6 @@
 import 'package:pigeon/pigeon.dart';
 
-// TODO: Waiting new Pigeon release to support enums
+// TODO: Enum supported on Pigeon, but not List<Enum>. Waiting to talk about consents change.
 // enum DecibelCustomerConsentType {
 //   all,
 //   recordingAndTracking,
@@ -16,7 +16,6 @@ class SessionMessage {
   String? account;
   String? property;
   List<int>? consents;
-  // DecibelCustomerConsentType? consents;
 }
 
 class ConsentsMessage {
@@ -59,14 +58,4 @@ abstract class DecibelSdkApi {
   void sendDimensionWithNumber(DimensionNumberMessage msg);
   void sendDimensionWithBool(DimensionBoolMessage msg);
   void sendGoal(GoalMessage msg);
-}
-
-void configurePigeon(PigeonOptions opts) {
-  opts.dartOut = 'lib/messages.dart';
-  opts.objcHeaderOut = 'ios/Classes/messages.h';
-  opts.objcSourceOut = 'ios/Classes/messages.m';
-  opts.objcOptions!.prefix = 'FLT';
-  opts.javaOut =
-  'android/src/main/kotlin/com/decibel/decibel_sdk/Messages.java';
-  opts.javaOptions!.package = 'com.decibel.decibel_sdk';
 }
