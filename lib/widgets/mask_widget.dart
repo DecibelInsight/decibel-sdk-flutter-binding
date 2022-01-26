@@ -1,4 +1,5 @@
 import 'package:decibel_sdk/features/session_replay.dart';
+import 'package:decibel_sdk/utility/constants.dart';
 import 'package:flutter/widgets.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -12,8 +13,6 @@ class MaskWidget extends StatefulWidget {
 }
 
 class _MaskWidgetState extends State<MaskWidget> {
-  final double widgetNotVisible = 0.0;
-
   @override
   void initState() {
     super.initState();
@@ -24,12 +23,14 @@ class _MaskWidgetState extends State<MaskWidget> {
     return VisibilityDetector(
       key: UniqueKey(),
       onVisibilityChanged: (VisibilityInfo info) {
-        if (info.visibleFraction == widgetNotVisible) {
-          SessionReplay.instance.widgetsToMaskList.remove(widget.key);
-        } else {
-          if (!SessionReplay.instance.widgetsToMaskList
-              .contains(widget.key as GlobalKey)) {
-            SessionReplay.instance.widgetsToMaskList.add(widget.key as GlobalKey);
+        if(widget.key != null){
+          if (info.visibleFraction == VisibilityConst.notVisible) {
+            SessionReplay.instance.widgetsToMaskList.remove(widget.key);
+          } else {
+            if (!SessionReplay.instance.widgetsToMaskList
+                .contains(widget.key! as GlobalKey)) {
+              SessionReplay.instance.widgetsToMaskList.add(widget.key! as GlobalKey);
+            }
           }
         }
       },

@@ -7,7 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 import '../decibel_sdk.dart';
-import '../extensions.dart';
+import '../utility/extensions.dart';
 import '../messages.dart';
 
 class SessionReplay {
@@ -27,7 +27,7 @@ class SessionReplay {
   void start() {
     print("DecibelSDK: SessionReplay started");
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) async {
+      _timer = Timer.periodic(const Duration(milliseconds: 250), (timer) async {
         if (!DecibelSdk.isPageTransitioning && _didUiChange()) {
           if (DecibelSdk.captureKey != null &&
               DecibelSdk.captureKey!.currentContext != null) {
@@ -67,18 +67,19 @@ class SessionReplay {
     final height = MediaQuery.of(context).size.height;
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(
-        recorder, Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()));
+        recorder, Rect.fromLTWH(0, 0, width, height),
+    );
     final image =
         await (context.findRenderObject() as RenderRepaintBoundary).toImage();
     canvas.drawImage(image, _offset, _paintEmpty);
     // Paint a rect in the widgets position to be masked
     final _previousBoundsList = List<Rect>.empty(growable: true);
-    widgetsToMaskList.forEach((globalKey) {
+    for (final globalKey in widgetsToMaskList) {
       globalKey.globalPaintBounds?.let((it) {
         _previousBoundsList.add(it);
         canvas.drawRect(it, _paintBlue);
       });
-    });
+    }
     final resultImage =
         await recorder.endRecording().toImage(width.toInt(), height.toInt());
     final resultImageData =
