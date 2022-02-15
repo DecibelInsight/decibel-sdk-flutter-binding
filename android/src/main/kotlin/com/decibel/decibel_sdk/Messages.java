@@ -20,189 +20,6 @@ import java.util.HashMap;
 @SuppressWarnings({"unused", "unchecked", "CodeBlock2Expr", "RedundantSuppression"})
 public class Messages {
 
-  public enum DecibelCurrency {
-    AED(0),
-    AFN(1),
-    ALL(2),
-    AMD(3),
-    ANG(4),
-    AOA(5),
-    ARS(6),
-    AUD(7),
-    AWG(8),
-    AZN(9),
-    BAM(10),
-    BBD(11),
-    BDT(12),
-    BGN(13),
-    BHD(14),
-    BIF(15),
-    BMD(16),
-    BND(17),
-    BOB(18),
-    BOV(19),
-    BRL(20),
-    BSD(21),
-    BTN(22),
-    BWP(23),
-    BYN(24),
-    BZD(25),
-    CAD(26),
-    CDF(27),
-    CHE(28),
-    CHF(29),
-    CHW(30),
-    CLF(31),
-    CLP(32),
-    CNY(33),
-    COP(34),
-    COU(35),
-    CRC(36),
-    CUC(37),
-    CUP(38),
-    CVE(39),
-    CZK(40),
-    DJF(41),
-    DKK(42),
-    DOP(43),
-    DZD(44),
-    EGP(45),
-    ERN(46),
-    ETB(47),
-    EUR(48),
-    FJD(49),
-    FKP(50),
-    GBP(51),
-    GEL(52),
-    GHS(53),
-    GIP(54),
-    GMD(55),
-    GNF(56),
-    GTQ(57),
-    GYD(58),
-    HKD(59),
-    HNL(60),
-    HRK(61),
-    HTG(62),
-    HUF(63),
-    IDR(64),
-    ILS(65),
-    INR(66),
-    IQD(67),
-    IRR(68),
-    ISK(69),
-    JMD(70),
-    JOD(71),
-    JPY(72),
-    KES(73),
-    KGS(74),
-    KHR(75),
-    KMF(76),
-    KPW(77),
-    KRW(78),
-    KWD(79),
-    KYD(80),
-    KZT(81),
-    LAK(82),
-    LBP(83),
-    LKR(84),
-    LRD(85),
-    LSL(86),
-    LYD(87),
-    MAD(88),
-    MDL(89),
-    MGA(90),
-    MKD(91),
-    MMK(92),
-    MNT(93),
-    MOP(94),
-    MRU(95),
-    MUR(96),
-    MVR(97),
-    MWK(98),
-    MXN(99),
-    MXV(100),
-    MYR(101),
-    MZN(102),
-    NAD(103),
-    NGN(104),
-    NIO(105),
-    NOK(106),
-    NPR(107),
-    NZD(108),
-    OMR(109),
-    PAB(110),
-    PEN(111),
-    PGK(112),
-    PHP(113),
-    PKR(114),
-    PLN(115),
-    PYG(116),
-    QAR(117),
-    RON(118),
-    RSD(119),
-    RUB(120),
-    RWF(121),
-    SAR(122),
-    SBD(123),
-    SCR(124),
-    SDG(125),
-    SEK(126),
-    SGD(127),
-    SHP(128),
-    SLL(129),
-    SOS(130),
-    SRD(131),
-    SSP(132),
-    STN(133),
-    SVC(134),
-    SYP(135),
-    SZL(136),
-    THB(137),
-    TJS(138),
-    TMT(139),
-    TND(140),
-    TOP(141),
-    TRY(142),
-    TTD(143),
-    TWD(144),
-    TZS(145),
-    UAH(146),
-    UGX(147),
-    USD(148),
-    USN(149),
-    UYI(150),
-    UYU(151),
-    UYW(152),
-    UZS(153),
-    VES(154),
-    VND(155),
-    VUV(156),
-    WST(157),
-    XAF(158),
-    XAG(159),
-    XAU(160),
-    XCD(161),
-    XDR(162),
-    XOF(163),
-    XPD(164),
-    XPF(165),
-    XPT(166),
-    XSU(167),
-    XTS(168),
-    XUA(169),
-    XXX(170),
-    YER(171),
-    ZAR(172),
-    ZMW(173),
-    ZWL(174);
-
-    private int index;
-    private DecibelCurrency(final int index) {
-      this.index = index;
-    }
-  }
-
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class StartScreenMessage {
     private String screenName;
@@ -271,13 +88,13 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class SessionMessage {
-    private String account;
-    public String getAccount() { return account; }
-    public void setAccount(String setterArg) { this.account = setterArg; }
+    private Long account;
+    public Long getAccount() { return account; }
+    public void setAccount(Long setterArg) { this.account = setterArg; }
 
-    private String property;
-    public String getProperty() { return property; }
-    public void setProperty(String setterArg) { this.property = setterArg; }
+    private Long property;
+    public Long getProperty() { return property; }
+    public void setProperty(Long setterArg) { this.property = setterArg; }
 
     private List<Long> consents;
     public List<Long> getConsents() { return consents; }
@@ -293,9 +110,9 @@ public class Messages {
     static SessionMessage fromMap(Map<String, Object> map) {
       SessionMessage fromMapResult = new SessionMessage();
       Object account = map.get("account");
-      fromMapResult.account = (String)account;
+      fromMapResult.account = (account == null) ? null : ((account instanceof Integer) ? (Integer)account : (Long)account);
       Object property = map.get("property");
-      fromMapResult.property = (String)property;
+      fromMapResult.property = (property == null) ? null : ((property instanceof Integer) ? (Integer)property : (Long)property);
       Object consents = map.get("consents");
       fromMapResult.consents = (List<Long>)consents;
       return fromMapResult;
@@ -449,15 +266,10 @@ public class Messages {
     public Double getValue() { return value; }
     public void setValue(Double setterArg) { this.value = setterArg; }
 
-    private Long currency;
-    public Long getCurrency() { return currency; }
-    public void setCurrency(Long setterArg) { this.currency = setterArg; }
-
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
       toMapResult.put("goal", goal);
       toMapResult.put("value", value);
-      toMapResult.put("currency", currency);
       return toMapResult;
     }
     static GoalMessage fromMap(Map<String, Object> map) {
@@ -466,8 +278,6 @@ public class Messages {
       fromMapResult.goal = (String)goal;
       Object value = map.get("value");
       fromMapResult.value = (Double)value;
-      Object currency = map.get("currency");
-      fromMapResult.currency = (currency == null) ? null : ((currency instanceof Integer) ? (Integer)currency : (Long)currency);
       return fromMapResult;
     }
   }

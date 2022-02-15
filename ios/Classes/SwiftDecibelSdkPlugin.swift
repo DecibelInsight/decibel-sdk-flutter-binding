@@ -86,23 +86,15 @@ public class SwiftDecibelSdkPlugin: NSObject, FlutterPlugin, FLTDecibelSdkApi {
     }
     
     public func sendGoalMsg(_ msg: FLTGoalMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
-//        guard let goalName = msg.goal else {
-//            return
-//        }
-//
-//        guard let goalValue = msg.value as? Float,
-//              let goalCurrency = msg.currency as? D,
-//              let currency = DecibelCurrency(rawValue: goalCurrency) else {
-//
-//            guard let goalValue = msg.value as? Float else {
-//                DecibelSDK.flutter.send(goal: goalName)
-//                return
-//            }
-//
-//            DecibelSDK.flutter.send(goal: goalName, with: goalValue)
-//            return
-//        }
-//
-//        DecibelSDK.flutter.send(goal: goalName, with: goalValue, currency: currency)
+        guard let goalName = msg.goal else {
+            return
+        }
+
+        guard let goalValue = msg.value as? Float else {
+            DecibelSDK.flutter.send(goal: goalName)
+            return
+        }
+
+        DecibelSDK.flutter.send(goal: goalName, with: goalValue)
     }
 }

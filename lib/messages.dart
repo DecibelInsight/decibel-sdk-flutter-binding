@@ -8,184 +8,6 @@ import 'dart:typed_data' show Uint8List, Int32List, Int64List, Float64List;
 import 'package:flutter/foundation.dart' show WriteBuffer, ReadBuffer;
 import 'package:flutter/services.dart';
 
-enum DecibelCurrency {
-  AED,
-  AFN,
-  ALL,
-  AMD,
-  ANG,
-  AOA,
-  ARS,
-  AUD,
-  AWG,
-  AZN,
-  BAM,
-  BBD,
-  BDT,
-  BGN,
-  BHD,
-  BIF,
-  BMD,
-  BND,
-  BOB,
-  BOV,
-  BRL,
-  BSD,
-  BTN,
-  BWP,
-  BYN,
-  BZD,
-  CAD,
-  CDF,
-  CHE,
-  CHF,
-  CHW,
-  CLF,
-  CLP,
-  CNY,
-  COP,
-  COU,
-  CRC,
-  CUC,
-  CUP,
-  CVE,
-  CZK,
-  DJF,
-  DKK,
-  DOP,
-  DZD,
-  EGP,
-  ERN,
-  ETB,
-  EUR,
-  FJD,
-  FKP,
-  GBP,
-  GEL,
-  GHS,
-  GIP,
-  GMD,
-  GNF,
-  GTQ,
-  GYD,
-  HKD,
-  HNL,
-  HRK,
-  HTG,
-  HUF,
-  IDR,
-  ILS,
-  INR,
-  IQD,
-  IRR,
-  ISK,
-  JMD,
-  JOD,
-  JPY,
-  KES,
-  KGS,
-  KHR,
-  KMF,
-  KPW,
-  KRW,
-  KWD,
-  KYD,
-  KZT,
-  LAK,
-  LBP,
-  LKR,
-  LRD,
-  LSL,
-  LYD,
-  MAD,
-  MDL,
-  MGA,
-  MKD,
-  MMK,
-  MNT,
-  MOP,
-  MRU,
-  MUR,
-  MVR,
-  MWK,
-  MXN,
-  MXV,
-  MYR,
-  MZN,
-  NAD,
-  NGN,
-  NIO,
-  NOK,
-  NPR,
-  NZD,
-  OMR,
-  PAB,
-  PEN,
-  PGK,
-  PHP,
-  PKR,
-  PLN,
-  PYG,
-  QAR,
-  RON,
-  RSD,
-  RUB,
-  RWF,
-  SAR,
-  SBD,
-  SCR,
-  SDG,
-  SEK,
-  SGD,
-  SHP,
-  SLL,
-  SOS,
-  SRD,
-  SSP,
-  STN,
-  SVC,
-  SYP,
-  SZL,
-  THB,
-  TJS,
-  TMT,
-  TND,
-  TOP,
-  TRY,
-  TTD,
-  TWD,
-  TZS,
-  UAH,
-  UGX,
-  USD,
-  USN,
-  UYI,
-  UYU,
-  UYW,
-  UZS,
-  VES,
-  VND,
-  VUV,
-  WST,
-  XAF,
-  XAG,
-  XAU,
-  XCD,
-  XDR,
-  XOF,
-  XPD,
-  XPF,
-  XPT,
-  XSU,
-  XTS,
-  XUA,
-  XXX,
-  YER,
-  ZAR,
-  ZMW,
-  ZWL,
-}
-
 class StartScreenMessage {
   String? screenName;
   int? screenId;
@@ -231,8 +53,8 @@ class EndScreenMessage {
 }
 
 class SessionMessage {
-  String? account;
-  String? property;
+  int? account;
+  int? property;
   List<int?>? consents;
 
   Object encode() {
@@ -246,8 +68,8 @@ class SessionMessage {
   static SessionMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return SessionMessage()
-      ..account = pigeonMap['account'] as String?
-      ..property = pigeonMap['property'] as String?
+      ..account = pigeonMap['account'] as int?
+      ..property = pigeonMap['property'] as int?
       ..consents = (pigeonMap['consents'] as List<Object?>?)?.cast<int?>();
   }
 }
@@ -353,13 +175,11 @@ class DimensionBoolMessage {
 class GoalMessage {
   String? goal;
   double? value;
-  int? currency;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
     pigeonMap['goal'] = goal;
     pigeonMap['value'] = value;
-    pigeonMap['currency'] = currency;
     return pigeonMap;
   }
 
@@ -367,8 +187,7 @@ class GoalMessage {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return GoalMessage()
       ..goal = pigeonMap['goal'] as String?
-      ..value = pigeonMap['value'] as double?
-      ..currency = pigeonMap['currency'] as int?;
+      ..value = pigeonMap['value'] as double?;
   }
 }
 

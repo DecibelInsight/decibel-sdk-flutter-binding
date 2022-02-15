@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
@@ -9,56 +10,67 @@ import 'package:flutter/widgets.dart';
 import '../decibel_sdk.dart';
 import '../utility/extensions.dart';
 import '../messages.dart';
+import 'tracking.dart';
 
 class SessionReplay {
+  SessionReplay._internal();
+  static final _instance = SessionReplay._internal();
+  static SessionReplay get instance => _instance;
+
+  final DecibelSdkApi _apiInstance = DecibelSdkApi();
   final widgetsToMaskList = List<GlobalKey>.empty(growable: true);
   final _oldWidgetsList = List.empty(growable: true);
   final _newWidgetsList = List.empty(growable: true);
   final _paintBlue = Paint()..color = Colors.blue;
-  final _paintEmpty = Paint();
-  final _offset = Offset(0.0, 0.0);
-  late Timer _timer;
-  late DecibelSdkApi decibelSdkApi;
-
-  static final _instance = SessionReplay._internal();
-  SessionReplay._internal();
-  static SessionReplay get instance => _instance;
+  GlobalKey? captureKey;
+  bool isPageTransitioning = false;
+  Timer? _timer;
 
   void start() {
-    print("DecibelSDK: SessionReplay started");
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      _timer = Timer.periodic(const Duration(milliseconds: 250), (timer) async {
-        if (!DecibelSdk.isPageTransitioning && _didUiChange()) {
-          if (DecibelSdk.captureKey != null &&
-              DecibelSdk.captureKey!.currentContext != null) {
-            _captureImage(DecibelSdk.captureKey!.currentContext!);
+    if (_timer == null) {
+      _timer = Timer.periodic(const Duration(milliseconds: 250), (_) async {
+        if (!isPageTransitioning && _didUiChange()) {
+          if (captureKey != null && captureKey!.currentContext != null) {
+            await _captureImage(captureKey!.currentContext!);
           }
         }
       });
-    });
+      print("DecibelSDK: SessionReplay started");
+    }
   }
 
   void stop() {
-    print("DecibelSDK: SessionReplay stopped");
-    if (_timer.isActive) {
-      _timer.cancel();
+    if (_timer != null) {
+      _timer = null;
+      print("DecibelSDK: SessionReplay stopped");
+    }
+  }
+
+  Future<void> forceTakeScreenshot() async {
+    if (!isPageTransitioning &&
+        captureKey != null &&
+        captureKey!.currentContext != null) {
+      print('forcing screenshot');
+      await _captureImage(captureKey!.currentContext!);
     }
   }
 
   bool _didUiChange() {
     bool didUiChange = false;
     void findChildren(List<Element> list) {
-      list.forEach((element) {
-        _newWidgetsList.add(element.widget);
-        findChildren(element.children);
-      });
+      for (final child in list) {
+        _newWidgetsList.add(child.widget);
+        findChildren(child.children);
+      }
     }
 
-    findChildren(WidgetsBinding.instance!.renderViewElement!.children);
-    didUiChange = !listEquals(_oldWidgetsList, _newWidgetsList);
-    _oldWidgetsList.clear();
-    _oldWidgetsList.addAll(_newWidgetsList);
-    _newWidgetsList.clear();
+    if (WidgetsBinding.instance?.renderViewElement != null) {
+      findChildren(WidgetsBinding.instance!.renderViewElement!.children);
+      didUiChange = !listEquals(_oldWidgetsList, _newWidgetsList);
+      _oldWidgetsList.clear();
+      _oldWidgetsList.addAll(_newWidgetsList);
+      _newWidgetsList.clear();
+    }
     return didUiChange;
   }
 
@@ -67,33 +79,59 @@ class SessionReplay {
     final height = MediaQuery.of(context).size.height;
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(
-        recorder, Rect.fromLTWH(0, 0, width, height),
+      recorder,
+      Rect.fromLTWH(0, 0, width, height),
     );
-    final image =
-        await (context.findRenderObject() as RenderRepaintBoundary).toImage();
-    canvas.drawImage(image, _offset, _paintEmpty);
-    // Paint a rect in the widgets position to be masked
-    final _previousBoundsList = List<Rect>.empty(growable: true);
-    for (final globalKey in widgetsToMaskList) {
-      globalKey.globalPaintBounds?.let((it) {
-        _previousBoundsList.add(it);
-        canvas.drawRect(it, _paintBlue);
-      });
-    }
-    final resultImage =
-        await recorder.endRecording().toImage(width.toInt(), height.toInt());
-    final resultImageData =
-        await resultImage.toByteData(format: ui.ImageByteFormat.png);
+    try {
+      final renderObject = context.findRenderObject();
+      if (renderObject != null) {
+        final image = await (renderObject as RenderRepaintBoundary).toImage();
+        canvas.drawImage(image, Offset.zero, Paint());
+        // Paint a rect in the widgets position to be masked
+        final _previousCoordsList = List<Rect>.empty(growable: true);
+        print('masks to apply ${widgetsToMaskList.length}');
+        for (final globalKey in widgetsToMaskList) {
+          globalKey.globalPaintBounds?.let((it) {
+            _previousCoordsList.add(it);
+            canvas.drawRect(it, _paintBlue);
+          });
+        }
+        final resultImage = await recorder
+            .endRecording()
+            .toImage(width.toInt(), height.toInt());
+        final resultImageData =
+            await resultImage.toByteData(format: ui.ImageByteFormat.png);
 
-    final _nextBoundsList = List<Rect>.empty(growable: true);
-    widgetsToMaskList.forEach((globalKey) {
-      globalKey.globalPaintBounds?.let((it) {
-        _nextBoundsList.add(it);
-      });
-    });
-    if (resultImageData != null && listEquals(_previousBoundsList, _nextBoundsList)) {
-      await decibelSdkApi.sendScreenshot(ScreenshotMessage()
-        ..screenshotData = resultImageData.buffer.asUint8List());
+        final _currentCoordsList = List<Rect>.empty(growable: true);
+        for (final globalKey in widgetsToMaskList) {
+          globalKey.globalPaintBounds?.let((it) {
+            _currentCoordsList.add(it);
+          });
+        }
+        // We compare these lists to check that the masks won't be misplaced
+        if (resultImageData != null &&
+            listEquals(_previousCoordsList, _currentCoordsList)) {
+          if (_timer != null && !isPageTransitioning) {
+            print('Saving screenshot ${Tracking.instance.lastVisitedScreenId}');
+            await _sendScreenshot(
+                resultImageData.buffer.asUint8List(),
+                Tracking.instance.lastVisitedScreenId,
+                Tracking.instance.lastVisitedScreenName,
+                DateTime.now().millisecondsSinceEpoch);
+          }
+        }
+      }
+    } on Exception catch (_) {
+      //TODO: Handle exception
     }
+  }
+
+  Future<void> _sendScreenshot(Uint8List screenshotData, int screenId,
+      String screenName, int startFocusTime) async {
+    await _apiInstance.saveScreenshot(ScreenshotMessage()
+      ..screenshotData = screenshotData
+      ..screenId = screenId
+      ..screenName = screenName
+      ..startFocusTime = startFocusTime);
   }
 }

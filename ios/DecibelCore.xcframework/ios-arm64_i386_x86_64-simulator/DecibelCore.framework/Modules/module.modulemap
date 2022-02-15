@@ -1,4 +1,0 @@
-framework module DecibelCore {
-  header "DecibelCore-Swift.h"
-  requires objc
-}

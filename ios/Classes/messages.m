@@ -230,14 +230,10 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
   if ((NSNull *)result.value == [NSNull null]) {
     result.value = nil;
   }
-  result.currency = dict[@"currency"];
-  if ((NSNull *)result.currency == [NSNull null]) {
-    result.currency = nil;
-  }
   return result;
 }
 - (NSDictionary *)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.goal ? self.goal : [NSNull null]), @"goal", (self.value ? self.value : [NSNull null]), @"value", (self.currency ? self.currency : [NSNull null]), @"currency", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.goal ? self.goal : [NSNull null]), @"goal", (self.value ? self.value : [NSNull null]), @"value", nil];
 }
 @end
 

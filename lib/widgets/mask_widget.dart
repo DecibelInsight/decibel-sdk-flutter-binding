@@ -27,10 +27,12 @@ class _MaskWidgetState extends State<MaskWidget> {
           if (info.visibleFraction == VisibilityConst.notVisible) {
             SessionReplay.instance.widgetsToMaskList.remove(widget.key);
           } else {
-            if (!SessionReplay.instance.widgetsToMaskList
-                .contains(widget.key! as GlobalKey)) {
-              SessionReplay.instance.widgetsToMaskList.add(widget.key! as GlobalKey);
-            }
+            // if (!SessionReplay.instance.widgetsToMaskList
+            //     .contains(widget.key! as GlobalKey)) {
+            // }
+            SessionReplay.instance.widgetsToMaskList.add(widget.key! as GlobalKey);
+            print('++++++++++++++ ADDED MASK ++++++++++++++++');
+            //TODO: How to ensure masks has been loaded?
           }
         }
       },
