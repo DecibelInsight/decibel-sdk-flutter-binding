@@ -1,5 +1,6 @@
 import 'package:decibel_sdk/decibel_sdk.dart';
 import 'package:decibel_sdk/features/session_replay.dart';
+import 'package:decibel_sdk/features/tracking.dart';
 import 'package:decibel_sdk/utility/constants.dart';
 import 'package:flutter/widgets.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -14,22 +15,23 @@ class ScreenWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _ScreenWidgetState();
 }
 
-class _ScreenWidgetState extends State<ScreenWidget> with WidgetsBindingObserver {
+class _ScreenWidgetState extends State<ScreenWidget>
+    with WidgetsBindingObserver {
   final GlobalKey _globalKey = GlobalKey();
   ModalRoute<Object?>? route;
 
   // Defining an internal function to be able to remove the listener
   void animationListener(status) {
-    if (status == AnimationStatus.completed) {
-      DecibelSdk.isPageTransitioning = false;
-    } else {
-      DecibelSdk.isPageTransitioning = true;
-    }
+    SessionReplay.instance.isPageTransitioning =
+        status != AnimationStatus.completed;
   }
-  
+
   @override
   void initState() {
     super.initState();
+    print(
+        '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} INITSTATE +++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+    SessionReplay.instance.stop();
     SessionReplay.instance.widgetsToMaskList.clear();
     WidgetsBinding.instance!
       ..addObserver(this)
@@ -42,7 +44,7 @@ class _ScreenWidgetState extends State<ScreenWidget> with WidgetsBindingObserver
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    switch(state) {
+    switch (state) {
       case AppLifecycleState.resumed:
         print('AppLifecycleState resumed');
         break;
@@ -66,14 +68,22 @@ class _ScreenWidgetState extends State<ScreenWidget> with WidgetsBindingObserver
       key: UniqueKey(),
       onVisibilityChanged: (VisibilityInfo info) {
         if (info.visibleFraction == VisibilityConst.notVisible) {
-          // SessionReplay.instance.widgetsToMaskList.clear();
-          // print('${widget.screenName} NOT visible');
+          // if (widget.screenName != Tracking.instance.lastVisitedScreenName) {
+          //   print(
+          //       '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} NOT VISIBLE +++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+          // }
         } else {
-          if(widget.screenName != DecibelSdk.lastVisitedScreen){
-            print('${widget.screenName} visible');
-            DecibelSdk.captureKey = _globalKey;
-            DecibelSdk.setScreen(widget.screenName);
-            DecibelSdk.lastVisitedScreen = widget.screenName;
+          if (widget.screenName != Tracking.instance.lastVisitedScreenName) {
+            print(
+                '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} VISIBLE +++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+            SessionReplay.instance.start();
+            SessionReplay.instance.captureKey = _globalKey;
+            if (Tracking.instance.lastVisitedScreenName != '') {
+              Tracking.instance
+                  .endScreen(Tracking.instance.lastVisitedScreenName);
+            }
+            Tracking.instance.startScreen(widget.screenName);
+            Tracking.instance.lastVisitedScreenName = widget.screenName;
           }
         }
       },
