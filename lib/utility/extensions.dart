@@ -1,11 +1,9 @@
-import 'package:flutter/rendering.dart';
+import 'package:decibel_sdk/utility/enums.dart';
 import 'package:flutter/widgets.dart';
-
-import 'enums.dart';
 
 extension ElementExt on Element {
   List<Element> get children {
-    List<Element> _children = <Element>[];
+    final List<Element> _children = <Element>[];
     visitChildElements((Element element) => _children.add(element));
     return _children;
   }
@@ -14,7 +12,7 @@ extension ElementExt on Element {
 extension GlobalKeyExt on GlobalKey {
   Rect? get globalPaintBounds {
     final renderObject = currentContext?.findRenderObject();
-    var translation = renderObject?.getTransformTo(null).getTranslation();
+    final translation = renderObject?.getTransformTo(null).getTranslation();
     if (translation != null) {
       return renderObject!.paintBounds
           .shift(Offset(translation.x, translation.y));
@@ -24,9 +22,10 @@ extension GlobalKeyExt on GlobalKey {
   }
 }
 
-extension ListDecibelCustomerConsentTypeExt on List<DecibelCustomerConsentType> {
+extension ListDecibelCustomerConsentTypeExt
+    on List<DecibelCustomerConsentType> {
   List<int> toIndexList() {
-    return this.map((consent) => consent.index).toList();
+    return map((consent) => consent.index).toList();
   }
 }
 

@@ -1,8 +1,5 @@
-import 'dart:typed_data';
 import 'package:decibel_sdk/features/session_replay.dart';
-import 'package:flutter/cupertino.dart';
-
-import '../messages.dart';
+import 'package:decibel_sdk/messages.dart';
 
 class Tracking {
   Tracking._internal();
@@ -15,11 +12,13 @@ class Tracking {
 
   Future<void> startScreen(String name) async {
     lastVisitedScreenId++;
-    print("startScreen $name $lastVisitedScreenId");
-    await _apiInstance.startScreen(StartScreenMessage()
-      ..screenName = name
-      ..screenId = lastVisitedScreenId
-      ..startTime = DateTime.now().millisecondsSinceEpoch);
+    //debugPrint('startScreen $name $lastVisitedScreenId');
+    await _apiInstance.startScreen(
+      StartScreenMessage()
+        ..screenName = name
+        ..screenId = lastVisitedScreenId
+        ..startTime = DateTime.now().millisecondsSinceEpoch,
+    );
     Future.delayed(const Duration(milliseconds: 250), () async {
       await SessionReplay.instance.forceTakeScreenshot();
     });
@@ -27,9 +26,11 @@ class Tracking {
   }
 
   Future<void> endScreen(String name) async {
-    await _apiInstance.endScreen(EndScreenMessage()
-      ..screenName = name
-      ..screenId = lastVisitedScreenId
-      ..endTime = DateTime.now().millisecondsSinceEpoch);
+    await _apiInstance.endScreen(
+      EndScreenMessage()
+        ..screenName = name
+        ..screenId = lastVisitedScreenId
+        ..endTime = DateTime.now().millisecondsSinceEpoch,
+    );
   }
 }

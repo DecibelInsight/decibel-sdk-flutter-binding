@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:decibel_sdk/features/session_replay.dart';
+import 'package:decibel_sdk/messages.dart';
+import 'package:decibel_sdk/utility/enums.dart' as enums;
 import 'package:decibel_sdk/utility/extensions.dart';
 import 'package:flutter/material.dart';
-import 'messages.dart';
-import 'utility/enums.dart' as enums;
 
 /// DecibelSdk main class
 class DecibelSdk {
@@ -15,8 +15,11 @@ class DecibelSdk {
   }
 
   /// Initializes DecibelSdk
-  static Future<void> initialize(int account, int property,
-      [List<enums.DecibelCustomerConsentType>? consents]) async {
+  static Future<void> initialize(
+    int account,
+    int property, [
+    List<enums.DecibelCustomerConsentType>? consents,
+  ]) async {
     final sessionMessage = SessionMessage()
       ..account = account
       ..property = property
@@ -24,7 +27,9 @@ class DecibelSdk {
     await _api.initialize(sessionMessage);
     if (consents != null) {
       if (consents.contains(enums.DecibelCustomerConsentType.all) ||
-          consents.contains(enums.DecibelCustomerConsentType.recordingAndTracking)) {
+          consents.contains(
+            enums.DecibelCustomerConsentType.recordingAndTracking,
+          )) {
         SessionReplay.instance.start();
       }
     } else {
@@ -34,36 +39,48 @@ class DecibelSdk {
 
   /// Enable the Customer Consents list passed as parameter
   static Future<void> setEnableConsents(
-      List<enums.DecibelCustomerConsentType> consents) async {
+    List<enums.DecibelCustomerConsentType> consents,
+  ) async {
     await _api.setEnableConsents(
-        ConsentsMessage()..consents = consents.toIndexList());
+      ConsentsMessage()..consents = consents.toIndexList(),
+    );
     if (consents.contains(enums.DecibelCustomerConsentType.all) ||
-        consents.contains(enums.DecibelCustomerConsentType.recordingAndTracking)) {
+        consents
+            .contains(enums.DecibelCustomerConsentType.recordingAndTracking)) {
       SessionReplay.instance.start();
     }
   }
 
   /// Disable the Customer Consents list passed as parameter
   static Future<void> setDisableConsents(
-      List<enums.DecibelCustomerConsentType> consents) async {
+    List<enums.DecibelCustomerConsentType> consents,
+  ) async {
     await _api.setDisableConsents(
-        ConsentsMessage()..consents = consents.toIndexList());
+      ConsentsMessage()..consents = consents.toIndexList(),
+    );
     if (consents.contains(enums.DecibelCustomerConsentType.all) ||
-        consents.contains(enums.DecibelCustomerConsentType.recordingAndTracking)) {
+        consents
+            .contains(enums.DecibelCustomerConsentType.recordingAndTracking)) {
       SessionReplay.instance.stop();
     }
   }
 
   ///Set custom dimension with string
-  static Future<void> setDimensionWithString(String dimensionName, String value) async {
+  static Future<void> setDimensionWithString(
+    String dimensionName,
+    String value,
+  ) async {
     final dimension = DimensionStringMessage()
-                      ..dimensionName = dimensionName
-                      ..value = value;
+      ..dimensionName = dimensionName
+      ..value = value;
     await _api.sendDimensionWithString(dimension);
   }
 
   ///Set custom dimension with number
-  static Future<void> setDimensionWithNumber(String dimensionName, double value) async {
+  static Future<void> setDimensionWithNumber(
+    String dimensionName,
+    double value,
+  ) async {
     final dimension = DimensionNumberMessage()
       ..dimensionName = dimensionName
       ..value = value;
@@ -71,7 +88,10 @@ class DecibelSdk {
   }
 
   ///Set custom dimension with bool
-  static Future<void> setDimensionWithBool(String dimensionName, bool value) async {
+  static Future<void> setDimensionWithBool(
+    String dimensionName, {
+    bool value = false,
+  }) async {
     final dimension = DimensionBoolMessage()
       ..dimensionName = dimensionName
       ..value = value;

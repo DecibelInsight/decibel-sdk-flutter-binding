@@ -198,76 +198,67 @@ class _DecibelSdkApiCodec extends StandardMessageCodec {
     if (value is ConsentsMessage) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else 
-    if (value is DimensionBoolMessage) {
+    } else if (value is DimensionBoolMessage) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else 
-    if (value is DimensionNumberMessage) {
+    } else if (value is DimensionNumberMessage) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    } else 
-    if (value is DimensionStringMessage) {
+    } else if (value is DimensionStringMessage) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    } else 
-    if (value is EndScreenMessage) {
+    } else if (value is EndScreenMessage) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    } else 
-    if (value is GoalMessage) {
+    } else if (value is GoalMessage) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    } else 
-    if (value is ScreenshotMessage) {
+    } else if (value is ScreenshotMessage) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    } else 
-    if (value is SessionMessage) {
+    } else if (value is SessionMessage) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    } else 
-    if (value is StartScreenMessage) {
+    } else if (value is StartScreenMessage) {
       buffer.putUint8(136);
       writeValue(buffer, value.encode());
-    } else 
-{
+    } else {
       super.writeValue(buffer, value);
     }
   }
+
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 128:       
+      case 128:
         return ConsentsMessage.decode(readValue(buffer)!);
-      
-      case 129:       
+
+      case 129:
         return DimensionBoolMessage.decode(readValue(buffer)!);
-      
-      case 130:       
+
+      case 130:
         return DimensionNumberMessage.decode(readValue(buffer)!);
-      
-      case 131:       
+
+      case 131:
         return DimensionStringMessage.decode(readValue(buffer)!);
-      
-      case 132:       
+
+      case 132:
         return EndScreenMessage.decode(readValue(buffer)!);
-      
-      case 133:       
+
+      case 133:
         return GoalMessage.decode(readValue(buffer)!);
-      
-      case 134:       
+
+      case 134:
         return ScreenshotMessage.decode(readValue(buffer)!);
-      
-      case 135:       
+
+      case 135:
         return SessionMessage.decode(readValue(buffer)!);
-      
-      case 136:       
+
+      case 136:
         return StartScreenMessage.decode(readValue(buffer)!);
-      
-      default:      
+
+      default:
         return super.readValueOfType(type, buffer);
-      
     }
   }
 }
@@ -276,7 +267,8 @@ class DecibelSdkApi {
   /// Constructor for [DecibelSdkApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  DecibelSdkApi({BinaryMessenger? binaryMessenger}) : _binaryMessenger = binaryMessenger;
+  DecibelSdkApi({BinaryMessenger? binaryMessenger})
+      : _binaryMessenger = binaryMessenger;
 
   final BinaryMessenger? _binaryMessenger;
 
@@ -284,7 +276,8 @@ class DecibelSdkApi {
 
   Future<void> initialize(SessionMessage arg_msg) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.DecibelSdkApi.initialize', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.DecibelSdkApi.initialize', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object>[arg_msg]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -294,7 +287,8 @@ class DecibelSdkApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      final Map<Object?, Object?> error =
+          (replyMap['error'] as Map<Object?, Object?>?)!;
       throw PlatformException(
         code: (error['code'] as String?)!,
         message: error['message'] as String?,
@@ -307,7 +301,8 @@ class DecibelSdkApi {
 
   Future<void> startScreen(StartScreenMessage arg_msg) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.DecibelSdkApi.startScreen', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.DecibelSdkApi.startScreen', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object>[arg_msg]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -317,7 +312,8 @@ class DecibelSdkApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      final Map<Object?, Object?> error =
+          (replyMap['error'] as Map<Object?, Object?>?)!;
       throw PlatformException(
         code: (error['code'] as String?)!,
         message: error['message'] as String?,
@@ -330,7 +326,8 @@ class DecibelSdkApi {
 
   Future<void> endScreen(EndScreenMessage arg_msg) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.DecibelSdkApi.endScreen', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.DecibelSdkApi.endScreen', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object>[arg_msg]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -340,7 +337,8 @@ class DecibelSdkApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      final Map<Object?, Object?> error =
+          (replyMap['error'] as Map<Object?, Object?>?)!;
       throw PlatformException(
         code: (error['code'] as String?)!,
         message: error['message'] as String?,
@@ -353,7 +351,8 @@ class DecibelSdkApi {
 
   Future<void> setEnableConsents(ConsentsMessage arg_msg) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.DecibelSdkApi.setEnableConsents', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.DecibelSdkApi.setEnableConsents', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object>[arg_msg]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -363,7 +362,8 @@ class DecibelSdkApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      final Map<Object?, Object?> error =
+          (replyMap['error'] as Map<Object?, Object?>?)!;
       throw PlatformException(
         code: (error['code'] as String?)!,
         message: error['message'] as String?,
@@ -376,7 +376,8 @@ class DecibelSdkApi {
 
   Future<void> setDisableConsents(ConsentsMessage arg_msg) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.DecibelSdkApi.setDisableConsents', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.DecibelSdkApi.setDisableConsents', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object>[arg_msg]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -386,7 +387,8 @@ class DecibelSdkApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      final Map<Object?, Object?> error =
+          (replyMap['error'] as Map<Object?, Object?>?)!;
       throw PlatformException(
         code: (error['code'] as String?)!,
         message: error['message'] as String?,
@@ -399,7 +401,8 @@ class DecibelSdkApi {
 
   Future<void> saveScreenshot(ScreenshotMessage arg_msg) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.DecibelSdkApi.saveScreenshot', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.DecibelSdkApi.saveScreenshot', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object>[arg_msg]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -409,7 +412,8 @@ class DecibelSdkApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      final Map<Object?, Object?> error =
+          (replyMap['error'] as Map<Object?, Object?>?)!;
       throw PlatformException(
         code: (error['code'] as String?)!,
         message: error['message'] as String?,
@@ -422,7 +426,8 @@ class DecibelSdkApi {
 
   Future<void> sendDimensionWithString(DimensionStringMessage arg_msg) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.DecibelSdkApi.sendDimensionWithString', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.DecibelSdkApi.sendDimensionWithString', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object>[arg_msg]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -432,7 +437,8 @@ class DecibelSdkApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      final Map<Object?, Object?> error =
+          (replyMap['error'] as Map<Object?, Object?>?)!;
       throw PlatformException(
         code: (error['code'] as String?)!,
         message: error['message'] as String?,
@@ -445,7 +451,8 @@ class DecibelSdkApi {
 
   Future<void> sendDimensionWithNumber(DimensionNumberMessage arg_msg) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.DecibelSdkApi.sendDimensionWithNumber', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.DecibelSdkApi.sendDimensionWithNumber', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object>[arg_msg]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -455,7 +462,8 @@ class DecibelSdkApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      final Map<Object?, Object?> error =
+          (replyMap['error'] as Map<Object?, Object?>?)!;
       throw PlatformException(
         code: (error['code'] as String?)!,
         message: error['message'] as String?,
@@ -468,7 +476,8 @@ class DecibelSdkApi {
 
   Future<void> sendDimensionWithBool(DimensionBoolMessage arg_msg) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.DecibelSdkApi.sendDimensionWithBool', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.DecibelSdkApi.sendDimensionWithBool', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object>[arg_msg]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -478,7 +487,8 @@ class DecibelSdkApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      final Map<Object?, Object?> error =
+          (replyMap['error'] as Map<Object?, Object?>?)!;
       throw PlatformException(
         code: (error['code'] as String?)!,
         message: error['message'] as String?,
@@ -491,7 +501,8 @@ class DecibelSdkApi {
 
   Future<void> sendGoal(GoalMessage arg_msg) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.DecibelSdkApi.sendGoal', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.DecibelSdkApi.sendGoal', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object>[arg_msg]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -501,7 +512,8 @@ class DecibelSdkApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      final Map<Object?, Object?> error =
+          (replyMap['error'] as Map<Object?, Object?>?)!;
       throw PlatformException(
         code: (error['code'] as String?)!,
         message: error['message'] as String?,

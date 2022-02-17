@@ -1,3 +1,1 @@
-## 0.0.1
-
-* TODO: Describe initial release.
+For release notes see [Gitbook](https://decibel-documentation.gitbook.io/decibelsdk/flutter/changelog).

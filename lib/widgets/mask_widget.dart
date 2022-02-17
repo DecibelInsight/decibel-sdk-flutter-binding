@@ -23,15 +23,16 @@ class _MaskWidgetState extends State<MaskWidget> {
     return VisibilityDetector(
       key: UniqueKey(),
       onVisibilityChanged: (VisibilityInfo info) {
-        if(widget.key != null){
+        if (widget.key != null) {
           if (info.visibleFraction == VisibilityConst.notVisible) {
             SessionReplay.instance.widgetsToMaskList.remove(widget.key);
           } else {
             // if (!SessionReplay.instance.widgetsToMaskList
             //     .contains(widget.key! as GlobalKey)) {
             // }
-            SessionReplay.instance.widgetsToMaskList.add(widget.key! as GlobalKey);
-            print('++++++++++++++ ADDED MASK ++++++++++++++++');
+            SessionReplay.instance.widgetsToMaskList
+                .add(widget.key! as GlobalKey);
+            //debugPrint('++++++++++++++ ADDED MASK ++++++++++++++++');
             //TODO: How to ensure masks has been loaded?
           }
         }
