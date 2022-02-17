@@ -1,6 +1,6 @@
 import Flutter
 import UIKit
-import DecibelCoreFlutterSigma
+import DecibelCoreFlutter
 
 public class SwiftDecibelSdkPlugin: NSObject, FlutterPlugin, FLTDecibelSdkApi {
     public static func register(with registrar: FlutterPluginRegistrar) {

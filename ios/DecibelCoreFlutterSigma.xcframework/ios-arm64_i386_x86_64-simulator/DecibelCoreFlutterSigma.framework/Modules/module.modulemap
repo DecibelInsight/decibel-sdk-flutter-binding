@@ -1,4 +1,0 @@
-framework module DecibelCoreFlutterSigma {
-  header "DecibelCoreFlutterSigma-Swift.h"
-  requires objc
-}
