@@ -1,4 +1,3 @@
-import 'package:decibel_sdk/decibel_sdk.dart';
 import 'package:decibel_sdk/features/session_replay.dart';
 import 'package:decibel_sdk/features/tracking.dart';
 import 'package:decibel_sdk/utility/constants.dart';
@@ -6,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class ScreenWidget extends StatefulWidget {
-  ScreenWidget({required this.child, required this.screenName});
+  const ScreenWidget({required this.child, required this.screenName});
 
   final Widget child;
   final String screenName;
@@ -21,7 +20,7 @@ class _ScreenWidgetState extends State<ScreenWidget>
   ModalRoute<Object?>? route;
 
   // Defining an internal function to be able to remove the listener
-  void animationListener(status) {
+  void _animationListener(status) {
     SessionReplay.instance.isPageTransitioning =
         status != AnimationStatus.completed;
   }
@@ -29,15 +28,16 @@ class _ScreenWidgetState extends State<ScreenWidget>
   @override
   void initState() {
     super.initState();
-    print(
-        '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} INITSTATE +++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+    //debugPrint(
+    //   '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} INITSTATE +++++++++++++++++++++++++++++++++++++++++++++++++++++++',
+    // );
     SessionReplay.instance.stop();
     SessionReplay.instance.widgetsToMaskList.clear();
     WidgetsBinding.instance!
       ..addObserver(this)
       ..addPostFrameCallback((_) async {
         route = ModalRoute.of(context);
-        route?.animation?.addStatusListener(animationListener);
+        route?.animation?.addStatusListener(_animationListener);
       });
   }
 
@@ -46,10 +46,10 @@ class _ScreenWidgetState extends State<ScreenWidget>
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.resumed:
-        print('AppLifecycleState resumed');
+        //debugPrint('AppLifecycleState resumed');
         break;
       case AppLifecycleState.paused:
-        print('AppLifecycleState paused');
+        //debugPrint('AppLifecycleState paused');
         break;
       default:
     }
@@ -58,7 +58,7 @@ class _ScreenWidgetState extends State<ScreenWidget>
   @override
   void dispose() {
     WidgetsBinding.instance!.removeObserver(this);
-    route?.animation?.removeStatusListener(animationListener);
+    route?.animation?.removeStatusListener(_animationListener);
     super.dispose();
   }
 
@@ -67,15 +67,11 @@ class _ScreenWidgetState extends State<ScreenWidget>
     return VisibilityDetector(
       key: UniqueKey(),
       onVisibilityChanged: (VisibilityInfo info) {
-        if (info.visibleFraction == VisibilityConst.notVisible) {
-          // if (widget.screenName != Tracking.instance.lastVisitedScreenName) {
-          //   print(
-          //       '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} NOT VISIBLE +++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-          // }
-        } else {
+        if(info.visibleFraction != VisibilityConst.notVisible) {
           if (widget.screenName != Tracking.instance.lastVisitedScreenName) {
-            print(
-                '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} VISIBLE +++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+            // debugPrint(
+            //   '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} VISIBLE +++++++++++++++++++++++++++++++++++++++++++++++++++++++',
+            // );
             SessionReplay.instance.start();
             SessionReplay.instance.captureKey = _globalKey;
             if (Tracking.instance.lastVisitedScreenName != '') {

@@ -2,15 +2,12 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:decibel_sdk/features/tracking.dart';
+import 'package:decibel_sdk/messages.dart';
+import 'package:decibel_sdk/utility/extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-
-import '../decibel_sdk.dart';
-import '../utility/extensions.dart';
-import '../messages.dart';
-import 'tracking.dart';
 
 class SessionReplay {
   SessionReplay._internal();
@@ -21,28 +18,25 @@ class SessionReplay {
   final widgetsToMaskList = List<GlobalKey>.empty(growable: true);
   final _oldWidgetsList = List.empty(growable: true);
   final _newWidgetsList = List.empty(growable: true);
-  final _paintBlue = Paint()..color = Colors.blue;
-  GlobalKey? captureKey;
+  final _maskColor = Paint()..color = Colors.black;
   bool isPageTransitioning = false;
+  GlobalKey? captureKey;
   Timer? _timer;
 
   void start() {
-    if (_timer == null) {
-      _timer = Timer.periodic(const Duration(milliseconds: 250), (_) async {
+    _timer ??= Timer.periodic(const Duration(milliseconds: 250), (_) async {
         if (!isPageTransitioning && _didUiChange()) {
           if (captureKey != null && captureKey!.currentContext != null) {
             await _captureImage(captureKey!.currentContext!);
           }
         }
       });
-      print("DecibelSDK: SessionReplay started");
-    }
   }
 
   void stop() {
     if (_timer != null) {
       _timer = null;
-      print("DecibelSDK: SessionReplay stopped");
+      //debugPrint('DecibelSDK: SessionReplay stopped');
     }
   }
 
@@ -50,7 +44,7 @@ class SessionReplay {
     if (!isPageTransitioning &&
         captureKey != null &&
         captureKey!.currentContext != null) {
-      print('forcing screenshot');
+      //debugPrint('forcing screenshot');
       await _captureImage(captureKey!.currentContext!);
     }
   }
@@ -89,11 +83,11 @@ class SessionReplay {
         canvas.drawImage(image, Offset.zero, Paint());
         // Paint a rect in the widgets position to be masked
         final _previousCoordsList = List<Rect>.empty(growable: true);
-        print('masks to apply ${widgetsToMaskList.length}');
+        //debugPrint('masks to apply ${widgetsToMaskList.length}');
         for (final globalKey in widgetsToMaskList) {
           globalKey.globalPaintBounds?.let((it) {
             _previousCoordsList.add(it);
-            canvas.drawRect(it, _paintBlue);
+            canvas.drawRect(it, _maskColor);
           });
         }
         final resultImage = await recorder
@@ -112,12 +106,15 @@ class SessionReplay {
         if (resultImageData != null &&
             listEquals(_previousCoordsList, _currentCoordsList)) {
           if (_timer != null && !isPageTransitioning) {
-            print('Saving screenshot ${Tracking.instance.lastVisitedScreenId}');
+            //debugPrint(
+            //   'Saving screenshot ${Tracking.instance.lastVisitedScreenId}',
+            // );
             await _sendScreenshot(
-                resultImageData.buffer.asUint8List(),
-                Tracking.instance.lastVisitedScreenId,
-                Tracking.instance.lastVisitedScreenName,
-                DateTime.now().millisecondsSinceEpoch);
+              resultImageData.buffer.asUint8List(),
+              Tracking.instance.lastVisitedScreenId,
+              Tracking.instance.lastVisitedScreenName,
+              DateTime.now().millisecondsSinceEpoch,
+            );
           }
         }
       }
@@ -126,12 +123,18 @@ class SessionReplay {
     }
   }
 
-  Future<void> _sendScreenshot(Uint8List screenshotData, int screenId,
-      String screenName, int startFocusTime) async {
-    await _apiInstance.saveScreenshot(ScreenshotMessage()
-      ..screenshotData = screenshotData
-      ..screenId = screenId
-      ..screenName = screenName
-      ..startFocusTime = startFocusTime);
+  Future<void> _sendScreenshot(
+    Uint8List screenshotData,
+    int screenId,
+    String screenName,
+    int startFocusTime,
+  ) async {
+    await _apiInstance.saveScreenshot(
+      ScreenshotMessage()
+        ..screenshotData = screenshotData
+        ..screenId = screenId
+        ..screenName = screenName
+        ..startFocusTime = startFocusTime,
+    );
   }
 }
