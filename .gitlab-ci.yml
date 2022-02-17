@@ -1,23 +1,13 @@
 stages:
   - deploy
 
-git_deploy:
+deploy:
   stage: deploy
-  before_script:
-    - git branch -D master || true
-    - git tag | xargs git tag -d || true
-  image:
-    name: alpine/git
-    entrypoint:
-      - "/bin/sh"
-      - "-c"
-
+  image: decibel/docker-ansible
   script:
-    - git remote add github https://${USER_SDK}:${SECRET_SDK}@github.com/DecibelInsight/decibel-sdk-flutter-binding.git || true
-    - git checkout -b master
-    - git push -u github master
+    - tar czf decibel-sdk-flutter.tar.gz android ios lib pigeons .metadata analysis_options.yaml CHANGELOG.md decibel_sdk.iml LICENSE pigeon_interface.dart pubspec.yaml README.md run_pigeon.sh
     - VERSION=$(cat pubspec.yaml | grep "^version:" | awk '{print $2}')
-    - git tag ${VERSION}
-    - git push -u github --tags
+    - curl -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file decibel-sdk-flutter.tar.gz https://nexus.decibel.com/repository/flutter-sdk/${VERSION}/decibel-sdk-flutter.tar.gz
   only:
     - master
+    - DCBLMOB-1085
