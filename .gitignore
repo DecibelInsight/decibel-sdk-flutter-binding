@@ -5,3 +5,11 @@
 .pub/
 
 build/
+pubspec.lock
+
+*.iml
+*.ipr
+*.iws
+.idea/
+
+.gradle/*
