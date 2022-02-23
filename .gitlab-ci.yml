@@ -5,9 +5,8 @@ deploy:
   stage: deploy
   image: decibel/docker-ansible
   script:
-    - tar czf decibel-sdk-flutter.tar.gz android ios lib pigeons .metadata analysis_options.yaml CHANGELOG.md decibel_sdk.iml LICENSE pigeon_interface.dart pubspec.yaml README.md run_pigeon.sh
+    - tar czf decibel-sdk-flutter.tar.gz android ios lib pigeons .metadata analysis_options.yaml CHANGELOG.md decibel_sdk.iml LICENSE pubspec.yaml README.md run_pigeon.sh
     - VERSION=$(cat pubspec.yaml | grep "^version:" | awk '{print $2}')
     - curl -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file decibel-sdk-flutter.tar.gz https://nexus.decibel.com/repository/flutter-sdk/${VERSION}/decibel-sdk-flutter.tar.gz
   only:
     - master
-    - DCBLMOB-1085
