@@ -2,7 +2,8 @@ package com.decibel.decibel_sdk
 
 import android.util.Log
 import androidx.annotation.NonNull
-import com.decibel.builder.dev.Decibel
+//import com.decibel.builder.dev.Decibel
+import com.decibel.builder.prod.Decibel
 import com.decibel.common.enums.PlatformType
 import com.decibel.common.internal.models.Customer
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -15,7 +16,6 @@ class DecibelSdkPlugin: FlutterPlugin, Messages.DecibelSdkApi {
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
   /// when the Flutter Engine is detached from the Activity
   private lateinit var channel : MethodChannel
-
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     Messages.DecibelSdkApi.setup(flutterPluginBinding.binaryMessenger, this)
   }
@@ -25,7 +25,7 @@ class DecibelSdkPlugin: FlutterPlugin, Messages.DecibelSdkApi {
   }
 
   override fun initialize(arg: Messages.SessionMessage?) {
-    Log.d("LOGTAG", "init")
+//    Log.d("LOGTAG", "init")
     arg?.let {
       Decibel.sdk.initialize(Customer(it.account, it.property), PlatformType.FLUTTER)
     }
@@ -53,7 +53,7 @@ class DecibelSdkPlugin: FlutterPlugin, Messages.DecibelSdkApi {
 
   override fun saveScreenshot(arg: Messages.ScreenshotMessage?) {
     arg?.let {
-      Log.d("LOGTAG", "sendScreenshot with bytearray.size ${it.screenshotData.size}")
+//      Log.d("LOGTAG", "sendScreenshot with bytearray.size ${it.screenshotData.size}")
       Decibel.sdk.saveScreenShot(it.screenshotData, it.screenId, it.screenName, it.startFocusTime)
     }
   }

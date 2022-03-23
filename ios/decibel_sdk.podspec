@@ -4,14 +4,14 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'decibel_sdk'
-  s.version          = '0.0.1'
+  s.version          = '1.0.0'
   s.summary          = 'Decibel SDK flutter binding'
   s.description      = <<-DESC
 Decibel SDK flutter binding
                        DESC
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'DecibelSDK' => 'decibel-mobile-sdk@medallia.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
@@ -21,5 +21,5 @@ Decibel SDK flutter binding
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
   s.swift_version = '5.0'
 
-  s.vendored_frameworks = 'DecibelCoreFlutterSigma.xcframework'
+  s.vendored_frameworks = 'DecibelCoreFlutter.xcframework'
 end
