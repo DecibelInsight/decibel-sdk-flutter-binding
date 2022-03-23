@@ -3,6 +3,7 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <type id="android" />
   </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_16" />
   <component name="ProjectType">
     <option name="id" value="io.flutter" />
   </component>
