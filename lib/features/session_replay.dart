@@ -79,8 +79,12 @@ class SessionReplay {
     try {
       final renderObject = context.findRenderObject();
       if (renderObject != null) {
+        RenderBox box = context.findRenderObject() as RenderBox;
+        Offset position = box.localToGlobal(Offset.zero);
+        var newPosition = Offset(0, position.dy);
+
         final image = await (renderObject as RenderRepaintBoundary).toImage();
-        canvas.drawImage(image, Offset.zero, Paint());
+        canvas.drawImage(image, newPosition, Paint());
         // Paint a rect in the widgets position to be masked
         final _previousCoordsList = List<Rect>.empty(growable: true);
         //debugPrint('masks to apply ${widgetsToMaskList.length}');
