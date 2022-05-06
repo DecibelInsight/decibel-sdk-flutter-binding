@@ -18,7 +18,7 @@ class SessionReplay {
   final widgetsToMaskList = List<GlobalKey>.empty(growable: true);
   final _oldWidgetsList = List.empty(growable: true);
   final _newWidgetsList = List.empty(growable: true);
-  final _maskColor = Paint()..color = Colors.black;
+  final _maskColor = Paint()..color = Colors.grey;
   bool isPageTransitioning = false;
   GlobalKey? captureKey;
   Timer? _timer;
