@@ -1,5 +1,5 @@
 group 'com.decibel.decibel_sdk'
-version '1.0.1'
+version '1.0.2'
 
 buildscript {
     ext.kotlin_version = '1.4.32'
@@ -55,5 +55,5 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "com.decibel:decibel-android-sdk-builder-prod:1.9.1"
+    implementation "com.decibel:decibel-android-sdk-builder-prod:1.9.4"
 }

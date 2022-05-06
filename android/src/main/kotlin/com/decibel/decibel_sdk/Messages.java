@@ -97,9 +97,9 @@ public class Messages {
     public Long getProperty() { return property; }
     public void setProperty(Long setterArg) { this.property = setterArg; }
 
-    private List<Long> consents;
-    public List<Long> getConsents() { return consents; }
-    public void setConsents(List<Long> setterArg) { this.consents = setterArg; }
+    private List<Integer> consents;
+    public List<Integer> getConsents() { return consents; }
+    public void setConsents(List<Integer> setterArg) { this.consents = setterArg; }
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
@@ -115,16 +115,16 @@ public class Messages {
       Object property = map.get("property");
       fromMapResult.property = (property == null) ? null : ((property instanceof Integer) ? (Integer)property : (Long)property);
       Object consents = map.get("consents");
-      fromMapResult.consents = (List<Long>)consents;
+      fromMapResult.consents = (List<Integer>)consents;
       return fromMapResult;
     }
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class ConsentsMessage {
-    private List<Long> consents;
-    public List<Long> getConsents() { return consents; }
-    public void setConsents(List<Long> setterArg) { this.consents = setterArg; }
+    private List<Integer> consents;
+    public List<Integer> getConsents() { return consents; }
+    public void setConsents(List<Integer> setterArg) { this.consents = setterArg; }
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
@@ -134,7 +134,7 @@ public class Messages {
     static ConsentsMessage fromMap(Map<String, Object> map) {
       ConsentsMessage fromMapResult = new ConsentsMessage();
       Object consents = map.get("consents");
-      fromMapResult.consents = (List<Long>)consents;
+      fromMapResult.consents = (List<Integer>)consents;
       return fromMapResult;
     }
   }
