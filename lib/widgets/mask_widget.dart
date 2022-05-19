@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class MaskWidget extends StatefulWidget {
-  MaskWidget({required this.child}) : super(key: GlobalKey());
+  const MaskWidget({required this.child});
 
   final Widget child;
 
@@ -13,31 +13,31 @@ class MaskWidget extends StatefulWidget {
 }
 
 class _MaskWidgetState extends State<MaskWidget> {
+  late GlobalKey globalKey;
+  late UniqueKey uniqueKey;
+
   @override
   void initState() {
+    globalKey = GlobalKey();
+    uniqueKey = UniqueKey();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return VisibilityDetector(
-      key: UniqueKey(),
-      onVisibilityChanged: (VisibilityInfo info) {
-        if (widget.key != null) {
+    return KeyedSubtree(
+      key: globalKey,
+      child: VisibilityDetector(
+        key: uniqueKey,
+        onVisibilityChanged: (VisibilityInfo info) {
           if (info.visibleFraction == VisibilityConst.notVisible) {
-            SessionReplay.instance.widgetsToMaskList.remove(widget.key);
+            SessionReplay.instance.widgetsToMaskList.remove(globalKey);
           } else {
-            // if (!SessionReplay.instance.widgetsToMaskList
-            //     .contains(widget.key! as GlobalKey)) {
-            // }
-            SessionReplay.instance.widgetsToMaskList
-                .add(widget.key! as GlobalKey);
-            //debugPrint('++++++++++++++ ADDED MASK ++++++++++++++++');
-            //TODO: How to ensure masks has been loaded?
+            SessionReplay.instance.widgetsToMaskList.add(globalKey);
           }
-        }
-      },
-      child: widget.child,
+        },
+        child: widget.child,
+      ),
     );
   }
 }
