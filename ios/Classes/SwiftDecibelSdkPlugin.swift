@@ -11,41 +11,47 @@ public class SwiftDecibelSdkPlugin: NSObject, FlutterPlugin, FLTDecibelSdkApi {
 
     public func initializeMsg(_ msg: FLTSessionMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         if let account = msg.account, let property = msg.property, let consents = msg.consents as? [Int] {
-            DecibelSDK.flutter.initialize(account: String(describing: account), property: String(describing: property), consents: consents)
+            DecibelSDK.multiPlatform.initialize(account: String(describing: account),
+                                                property: String(describing: property),
+                                                consents: consents,
+                                                multiPlatform: SDKMultiPlatform(type: .flutter, version: "1.0.2", language: "Dart"))
         } else if let account = msg.account, let property = msg.property {
-            DecibelSDK.flutter.initialize(account: String(describing: account), property: String(describing: property))
+            DecibelSDK.multiPlatform.initialize(account: String(describing: account),
+                                                property: String(describing: property),
+                                                multiPlatform: SDKMultiPlatform(type: .flutter, version: "1.0.2", language: "Dart"))
         }
-        DecibelSDK.flutter.setLogLevel(.info)
+        DecibelSDK.multiPlatform.setLogLevel(.info)
+
     }
 
     public func startScreenMsg(_ msg: FLTStartScreenMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         if let screenName = msg.screenName, let screenId = msg.screenId as? Int{
-            DecibelSDK.flutter.set(screen: screenName, id: screenId)
+            DecibelSDK.multiPlatform.set(screen: screenName, id: screenId)
         }
     }
     
     public func endScreenMsg(_ msg: FLTEndScreenMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
 //        if let screenName = msg.screenName, let screenId = msg.screenId as? Int{
-//            DecibelSDK.flutter.set(screen: screenName, id: screenId)
+//            DecibelSDK.multiPlatform.set(screen: screenName, id: screenId)
 //        }
     }
 
     public func setEnableConsentsMsg(_ msg: FLTConsentsMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         if let consents = msg.consents as? [Int] {
-            DecibelSDK.flutter.setEnableConsents(consents)
+            DecibelSDK.multiPlatform.setEnableConsents(consents)
         }
     }
 
     public func setDisableConsentsMsg(_ msg: FLTConsentsMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         if let consents = msg.consents as? [Int] {
-            DecibelSDK.flutter.setDisableConsents(consents)
+            DecibelSDK.multiPlatform.setDisableConsents(consents)
         }
     }
 
     public func saveScreenshotMsg(_ msg: FLTScreenshotMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         if let screenshotData = msg.screenshotData, let screenId = msg.screenId as? Int, let screenName = msg.screenName,
            let startFocusTime = msg.startFocusTime as? TimeInterval {
-            DecibelSDK.flutter.saveScreenShot(screenshot: screenshotData.data, id: screenId, screenName: screenName, startFocusTime: startFocusTime)
+            DecibelSDK.multiPlatform.saveScreenShot(screenshot: screenshotData.data, id: screenId, screenName: screenName, startFocusTime: startFocusTime)
         }
     }
     
@@ -58,7 +64,7 @@ public class SwiftDecibelSdkPlugin: NSObject, FlutterPlugin, FLTDecibelSdkApi {
             return
         }
         
-        DecibelSDK.flutter.send(dimension: dimensionName, withString: dimensionValue)
+        DecibelSDK.multiPlatform.send(dimension: dimensionName, withString: dimensionValue)
     }
     
     public func sendDimension(withNumberMsg msg: FLTDimensionNumberMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
@@ -70,7 +76,7 @@ public class SwiftDecibelSdkPlugin: NSObject, FlutterPlugin, FLTDecibelSdkApi {
             return
         }
         
-        DecibelSDK.flutter.send(dimension: dimensionName, withNumber: dimensionValue)
+        DecibelSDK.multiPlatform.send(dimension: dimensionName, withNumber: dimensionValue)
     }
     
     public func sendDimension(withBoolMsg msg: FLTDimensionBoolMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
@@ -82,7 +88,7 @@ public class SwiftDecibelSdkPlugin: NSObject, FlutterPlugin, FLTDecibelSdkApi {
             return
         }
         
-        DecibelSDK.flutter.send(dimension: dimensionName, withBool: dimensionValue)
+        DecibelSDK.multiPlatform.send(dimension: dimensionName, withBool: dimensionValue)
     }
     
     public func sendGoalMsg(_ msg: FLTGoalMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
@@ -91,10 +97,10 @@ public class SwiftDecibelSdkPlugin: NSObject, FlutterPlugin, FLTDecibelSdkApi {
         }
 
         guard let goalValue = msg.value as? Float else {
-            DecibelSDK.flutter.send(goal: goalName)
+            DecibelSDK.multiPlatform.send(goal: goalName)
             return
         }
 
-        DecibelSDK.flutter.send(goal: goalName, with: goalValue)
+        DecibelSDK.multiPlatform.send(goal: goalName, with: goalValue)
     }
 }

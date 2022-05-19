@@ -3,9 +3,11 @@ package com.decibel.decibel_sdk
 import android.util.Log
 import androidx.annotation.NonNull
 //import com.decibel.builder.dev.Decibel
+import com.decibel.common.enums.CustomerConsentType
 import com.decibel.builder.prod.Decibel
 import com.decibel.common.enums.PlatformType
 import com.decibel.common.internal.models.Customer
+import com.decibel.common.internal.models.Multiplatform
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodChannel
 
@@ -26,8 +28,14 @@ class DecibelSdkPlugin: FlutterPlugin, Messages.DecibelSdkApi {
 
   override fun initialize(arg: Messages.SessionMessage?) {
 //    Log.d("LOGTAG", "init")
-    arg?.let {
-      Decibel.sdk.initialize(Customer(it.account, it.property), PlatformType.FLUTTER)
+    arg?.let { sessionMessage ->
+      sessionMessage.consents?.let {
+        val consents = translateConsenstsFlutterToAndroid(it)
+        Decibel.sdk.initialize(Customer(sessionMessage.account, sessionMessage.property), consents, Multiplatform(PlatformType.FLUTTER))
+      } ?: run {
+        Decibel.sdk.initialize(Customer(sessionMessage.account, sessionMessage.property), Multiplatform(PlatformType.FLUTTER))
+      }
+
     }
   }
 
@@ -44,11 +52,17 @@ class DecibelSdkPlugin: FlutterPlugin, Messages.DecibelSdkApi {
   }
 
   override fun setEnableConsents(arg: Messages.ConsentsMessage?) {
-    TODO("Not yet implemented")
+    arg?.consents?.let {
+      val consents = translateConsenstsFlutterToAndroid(it)
+      Decibel.sdk.enableUserConsent(consents)
+    }
   }
 
   override fun setDisableConsents(arg: Messages.ConsentsMessage?) {
-    TODO("Not yet implemented")
+    arg?.consents?.let {
+      val consents = translateConsenstsFlutterToAndroid(it)
+      Decibel.sdk.disableUserConsent(consents)
+    }
   }
 
   override fun saveScreenshot(arg: Messages.ScreenshotMessage?) {
@@ -80,5 +94,18 @@ class DecibelSdkPlugin: FlutterPlugin, Messages.DecibelSdkApi {
     msg?.let {
       Decibel.sdk.sendGoal(msg.goal, msg.value)
     }
+  }
+
+  fun translateConsenstsFlutterToAndroid(consents: MutableList<Int>): List<CustomerConsentType> {
+    val consents: List<CustomerConsentType> = consents.map {
+      when(it){
+        0 -> CustomerConsentType.ALL
+        1 -> CustomerConsentType.RECORD_SCREEN
+        2 -> CustomerConsentType.TRACK_SCREEN
+        3 -> CustomerConsentType.NONE
+        else -> CustomerConsentType.ALL
+      }
+    }
+    return consents
   }
 }
