@@ -57,6 +57,9 @@ class _ScreenWidgetState extends State<ScreenWidget>
 
   @override
   void dispose() {
+    // debugPrint(
+    //   '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} DISPOSE +++++++++++++++++++++++++++++++++++++++++++++++++++++++',
+    // );
     WidgetsBinding.instance!.removeObserver(this);
     route?.animation?.removeStatusListener(_animationListener);
     super.dispose();
@@ -67,19 +70,20 @@ class _ScreenWidgetState extends State<ScreenWidget>
     return VisibilityDetector(
       key: UniqueKey(),
       onVisibilityChanged: (VisibilityInfo info) {
-        if(info.visibleFraction != VisibilityConst.notVisible) {
-          if (widget.screenName != Tracking.instance.lastVisitedScreenName) {
+        if (info.visibleFraction != VisibilityConst.notVisible) {
+          if (Tracking.instance.visitedScreensList.isEmpty ||
+              widget.screenName !=
+                  Tracking.instance.visitedScreensList.last.name) {
             // debugPrint(
             //   '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} VISIBLE +++++++++++++++++++++++++++++++++++++++++++++++++++++++',
             // );
             SessionReplay.instance.start();
             SessionReplay.instance.captureKey = _globalKey;
-            if (Tracking.instance.lastVisitedScreenName != '') {
+            if (Tracking.instance.visitedScreensList.isNotEmpty) {
               Tracking.instance
-                  .endScreen(Tracking.instance.lastVisitedScreenName);
+                  .endScreen(Tracking.instance.visitedScreensList.last);
             }
             Tracking.instance.startScreen(widget.screenName);
-            Tracking.instance.lastVisitedScreenName = widget.screenName;
           }
         }
       },

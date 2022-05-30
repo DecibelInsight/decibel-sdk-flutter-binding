@@ -113,12 +113,12 @@ class SessionReplay {
             listEquals(_previousCoordsList, _currentCoordsList)) {
           if (_timer != null && !isPageTransitioning) {
             //debugPrint(
-            //   'Saving screenshot ${Tracking.instance.lastVisitedScreenId}',
+            //   'Saving screenshot ${Tracking.instance.visitedScreensList.last.name}-${Tracking.instance.visitedScreensList.last.id}',
             // );
             await _sendScreenshot(
               resultImageData.buffer.asUint8List(),
-              Tracking.instance.lastVisitedScreenId,
-              Tracking.instance.lastVisitedScreenName,
+              Tracking.instance.visitedScreensList.last.id,
+              Tracking.instance.visitedScreensList.last.name,
               DateTime.now().millisecondsSinceEpoch,
             );
           }
