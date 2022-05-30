@@ -19,18 +19,19 @@ class SessionReplay {
   final _oldWidgetsList = List.empty(growable: true);
   final _newWidgetsList = List.empty(growable: true);
   final _maskColor = Paint()..color = Colors.grey;
+  VoidCallback? unableToTakeScreenshotCallback;
   bool isPageTransitioning = false;
   GlobalKey? captureKey;
   Timer? _timer;
 
   void start() {
     _timer ??= Timer.periodic(const Duration(milliseconds: 250), (_) async {
-        if (!isPageTransitioning && _didUiChange()) {
-          if (captureKey != null && captureKey!.currentContext != null) {
-            await _captureImage(captureKey!.currentContext!);
-          }
+      if (!isPageTransitioning && _didUiChange()) {
+        if (captureKey != null && captureKey!.currentContext != null) {
+          await _captureImage(captureKey!.currentContext!);
         }
-      });
+      }
+    });
   }
 
   void stop() {
@@ -82,8 +83,15 @@ class SessionReplay {
         RenderBox box = context.findRenderObject() as RenderBox;
         Offset position = box.localToGlobal(Offset.zero);
         var newPosition = Offset(0, position.dy);
-
-        final image = await (renderObject as RenderRepaintBoundary).toImage();
+        late ui.Image image;
+        //handle assertion error: https://github.com/flutter/flutter/issues/22308
+        try {
+          image = await (renderObject as RenderRepaintBoundary).toImage();
+        } catch (_) {
+          // debugPrint('Unable to capture Image, renderObject is repainting');
+          unableToTakeScreenshotCallback?.call();
+          return;
+        }
         canvas.drawImage(image, newPosition, Paint());
         // Paint a rect in the widgets position to be masked
         final _previousCoordsList = List<Rect>.empty(growable: true);
@@ -123,6 +131,7 @@ class SessionReplay {
         }
       }
     } on Exception catch (_) {
+      rethrow;
       //TODO: Handle exception
     }
   }
