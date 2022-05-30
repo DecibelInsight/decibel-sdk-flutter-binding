@@ -33,6 +33,7 @@ class _ScreenWidgetState extends State<ScreenWidget>
     // );
     SessionReplay.instance.stop();
     SessionReplay.instance.widgetsToMaskList.clear();
+    SessionReplay.instance.unableToTakeScreenshotCallback = () {};
     WidgetsBinding.instance!
       ..addObserver(this)
       ..addPostFrameCallback((_) async {
@@ -67,13 +68,18 @@ class _ScreenWidgetState extends State<ScreenWidget>
     return VisibilityDetector(
       key: UniqueKey(),
       onVisibilityChanged: (VisibilityInfo info) {
-        if(info.visibleFraction != VisibilityConst.notVisible) {
+        if (info.visibleFraction != VisibilityConst.notVisible) {
           if (widget.screenName != Tracking.instance.lastVisitedScreenName) {
             // debugPrint(
             //   '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} VISIBLE +++++++++++++++++++++++++++++++++++++++++++++++++++++++',
             // );
             SessionReplay.instance.start();
             SessionReplay.instance.captureKey = _globalKey;
+            SessionReplay.instance.unableToTakeScreenshotCallback = () =>
+                WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+                  // debugPrint('forcing screenshot');
+                  SessionReplay.instance.forceTakeScreenshot();
+                });
             if (Tracking.instance.lastVisitedScreenName != '') {
               Tracking.instance
                   .endScreen(Tracking.instance.lastVisitedScreenName);
