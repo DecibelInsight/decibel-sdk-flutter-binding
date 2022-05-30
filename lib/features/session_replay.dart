@@ -24,20 +24,22 @@ class SessionReplay {
   Timer? _timer;
 
   void start() {
+    if (_timer != null && _timer!.isActive) {
+      _timer!.cancel();
+    }
+
     _timer ??= Timer.periodic(const Duration(milliseconds: 250), (_) async {
-        if (!isPageTransitioning && _didUiChange()) {
-          if (captureKey != null && captureKey!.currentContext != null) {
-            await _captureImage(captureKey!.currentContext!);
-          }
+      if (!isPageTransitioning && _didUiChange()) {
+        if (captureKey != null && captureKey!.currentContext != null) {
+          await _captureImage(captureKey!.currentContext!);
         }
-      });
+      }
+    });
   }
 
   void stop() {
-    if (_timer != null) {
-      _timer = null;
-      //debugPrint('DecibelSDK: SessionReplay stopped');
-    }
+    _timer?.cancel();
+    _timer = null;
   }
 
   Future<void> forceTakeScreenshot() async {
