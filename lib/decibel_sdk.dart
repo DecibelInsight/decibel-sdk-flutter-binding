@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:decibel_sdk/features/session_replay.dart';
+import 'package:decibel_sdk/features/tracking.dart';
 import 'package:decibel_sdk/messages.dart';
 import 'package:decibel_sdk/utility/enums.dart' as enums;
 import 'package:decibel_sdk/utility/extensions.dart';
@@ -107,7 +108,19 @@ class DecibelSdk {
   }
 
   ///Listener for tabBar change of tab
-  static void tabControllerListener(TabController tabController) {
+  static void tabControllerListener(
+    TabController tabController,
+    List<String> tabNames,
+  ) {
+    debugPrint("tabcontroller listener");
+    debugPrint(tabController.previousIndex.toString());
+    debugPrint('to');
+    debugPrint(tabController.index.toString());
     SessionReplay.instance.isPageTransitioning = tabController.indexIsChanging;
+    if (tabController.index != tabController.previousIndex &&
+        !tabController.indexIsChanging) {
+      Tracking.instance.endScreen(tabNames[tabController.previousIndex]);
+      Tracking.instance.startScreen(tabNames[tabController.index]);
+    }
   }
 }
