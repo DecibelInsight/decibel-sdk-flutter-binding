@@ -28,9 +28,7 @@ class _ScreenWidgetState extends State<ScreenWidget>
   @override
   void initState() {
     super.initState();
-    //debugPrint(
-    //   '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} INITSTATE +++++++++++++++++++++++++++++++++++++++++++++++++++++++',
-    // );
+
     SessionReplay.instance.stop();
     SessionReplay.instance.widgetsToMaskList.clear();
     SessionReplay.instance.unableToTakeScreenshotCallback = () {};
@@ -69,23 +67,16 @@ class _ScreenWidgetState extends State<ScreenWidget>
       key: UniqueKey(),
       onVisibilityChanged: (VisibilityInfo info) {
         if (info.visibleFraction != VisibilityConst.notVisible) {
-          if (widget.screenName != Tracking.instance.lastVisitedScreenName) {
-            // debugPrint(
-            //   '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} VISIBLE +++++++++++++++++++++++++++++++++++++++++++++++++++++++',
-            // );
+          if (Tracking.instance.visitedScreensList.isEmpty ||
+              widget.screenName !=
+                  Tracking.instance.visitedScreensList.last.name) {
             SessionReplay.instance.start();
             SessionReplay.instance.captureKey = _globalKey;
-            SessionReplay.instance.unableToTakeScreenshotCallback = () =>
-                WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-                  // debugPrint('forcing screenshot');
-                  SessionReplay.instance.forceTakeScreenshot();
-                });
-            if (Tracking.instance.lastVisitedScreenName != '') {
+            if (Tracking.instance.visitedScreensList.isNotEmpty) {
               Tracking.instance
-                  .endScreen(Tracking.instance.lastVisitedScreenName);
+                  .endScreen(Tracking.instance.visitedScreensList.last);
             }
             Tracking.instance.startScreen(widget.screenName);
-            Tracking.instance.lastVisitedScreenName = widget.screenName;
           }
         }
       },
