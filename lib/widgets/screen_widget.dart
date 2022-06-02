@@ -1,14 +1,23 @@
+import 'package:decibel_sdk/decibel_sdk.dart';
 import 'package:decibel_sdk/features/session_replay.dart';
 import 'package:decibel_sdk/features/tracking.dart';
 import 'package:decibel_sdk/utility/constants.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class ScreenWidget extends StatefulWidget {
-  const ScreenWidget({required this.child, required this.screenName});
+  const ScreenWidget({
+    required this.child,
+    required this.screenName,
+    this.tabController,
+    this.tabNames,
+  });
 
   final Widget child;
   final String screenName;
+  final TabController? tabController;
+  final List<String>? tabNames;
 
   @override
   State<StatefulWidget> createState() => _ScreenWidgetState();
@@ -40,6 +49,8 @@ class _ScreenWidgetState extends State<ScreenWidget>
         route = ModalRoute.of(context);
         route?.animation?.addStatusListener(_animationListener);
       });
+    widget.tabController?.addListener(() => DecibelSdk.tabControllerListener(
+        widget.tabController!, widget.tabNames!));
   }
 
   @override
@@ -60,6 +71,9 @@ class _ScreenWidgetState extends State<ScreenWidget>
   void dispose() {
     WidgetsBinding.instance!.removeObserver(this);
     route?.animation?.removeStatusListener(_animationListener);
+    widget.tabController?.removeListener(() => DecibelSdk.tabControllerListener(
+        widget.tabController!, widget.tabNames!));
+
     super.dispose();
   }
 
@@ -69,23 +83,32 @@ class _ScreenWidgetState extends State<ScreenWidget>
       key: UniqueKey(),
       onVisibilityChanged: (VisibilityInfo info) {
         if (info.visibleFraction != VisibilityConst.notVisible) {
-          if (widget.screenName != Tracking.instance.lastVisitedScreenName) {
-            // debugPrint(
-            //   '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} VISIBLE +++++++++++++++++++++++++++++++++++++++++++++++++++++++',
-            // );
-            SessionReplay.instance.start();
-            SessionReplay.instance.captureKey = _globalKey;
-            SessionReplay.instance.unableToTakeScreenshotCallback = () =>
-                WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-                  // debugPrint('forcing screenshot');
-                  SessionReplay.instance.forceTakeScreenshot();
-                });
-            if (Tracking.instance.lastVisitedScreenName != '') {
-              Tracking.instance
-                  .endScreen(Tracking.instance.lastVisitedScreenName);
-            }
-            Tracking.instance.startScreen(widget.screenName);
+          if (widget.tabController != null) {
+            Tracking.instance
+                .startScreen(widget.tabNames![widget.tabController!.index]);
             Tracking.instance.lastVisitedScreenName = widget.screenName;
+
+            return;
+          } else {
+            if (widget.screenName != Tracking.instance.lastVisitedScreenName) {
+              // debugPrint(
+              //   '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} VISIBLE +++++++++++++++++++++++++++++++++++++++++++++++++++++++',
+              // );
+              SessionReplay.instance.start();
+              SessionReplay.instance.captureKey = _globalKey;
+              SessionReplay.instance.unableToTakeScreenshotCallback = () =>
+                  WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+                    // debugPrint('forcing screenshot');
+                    SessionReplay.instance.forceTakeScreenshot();
+                  });
+
+              if (Tracking.instance.lastVisitedScreenName != '') {
+                Tracking.instance
+                    .endScreen(Tracking.instance.lastVisitedScreenName);
+              }
+              Tracking.instance.startScreen(widget.screenName);
+              Tracking.instance.lastVisitedScreenName = widget.screenName;
+            }
           }
         }
       },
