@@ -24,27 +24,28 @@ class SessionReplay {
   Timer? _timer;
 
   void start() {
+    if (_timer != null && _timer!.isActive) {
+      _timer!.cancel();
+    }
+
     _timer ??= Timer.periodic(const Duration(milliseconds: 250), (_) async {
-        if (!isPageTransitioning && _didUiChange()) {
-          if (captureKey != null && captureKey!.currentContext != null) {
-            await _captureImage(captureKey!.currentContext!);
-          }
+      if (!isPageTransitioning && _didUiChange()) {
+        if (captureKey != null && captureKey!.currentContext != null) {
+          await _captureImage(captureKey!.currentContext!);
         }
-      });
+      }
+    });
   }
 
   void stop() {
-    if (_timer != null) {
-      _timer = null;
-      //debugPrint('DecibelSDK: SessionReplay stopped');
-    }
+    _timer?.cancel();
+    _timer = null;
   }
 
   Future<void> forceTakeScreenshot() async {
     if (!isPageTransitioning &&
         captureKey != null &&
         captureKey!.currentContext != null) {
-      //debugPrint('forcing screenshot');
       await _captureImage(captureKey!.currentContext!);
     }
   }
@@ -110,13 +111,10 @@ class SessionReplay {
         if (resultImageData != null &&
             listEquals(_previousCoordsList, _currentCoordsList)) {
           if (_timer != null && !isPageTransitioning) {
-            //debugPrint(
-            //   'Saving screenshot ${Tracking.instance.lastVisitedScreenId}',
-            // );
             await _sendScreenshot(
               resultImageData.buffer.asUint8List(),
-              Tracking.instance.lastVisitedScreenId,
-              Tracking.instance.lastVisitedScreenName,
+              Tracking.instance.visitedScreensList.last.id,
+              Tracking.instance.visitedScreensList.last.name,
               DateTime.now().millisecondsSinceEpoch,
             );
           }
