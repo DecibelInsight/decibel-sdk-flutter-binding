@@ -28,9 +28,7 @@ class _ScreenWidgetState extends State<ScreenWidget>
   @override
   void initState() {
     super.initState();
-    //debugPrint(
-    //   '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} INITSTATE +++++++++++++++++++++++++++++++++++++++++++++++++++++++',
-    // );
+
     SessionReplay.instance.stop();
     SessionReplay.instance.widgetsToMaskList.clear();
     WidgetsBinding.instance!
@@ -57,9 +55,6 @@ class _ScreenWidgetState extends State<ScreenWidget>
 
   @override
   void dispose() {
-    // debugPrint(
-    //   '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} DISPOSE +++++++++++++++++++++++++++++++++++++++++++++++++++++++',
-    // );
     WidgetsBinding.instance!.removeObserver(this);
     route?.animation?.removeStatusListener(_animationListener);
     super.dispose();
@@ -74,9 +69,6 @@ class _ScreenWidgetState extends State<ScreenWidget>
           if (Tracking.instance.visitedScreensList.isEmpty ||
               widget.screenName !=
                   Tracking.instance.visitedScreensList.last.name) {
-            // debugPrint(
-            //   '+++++++++++++++++++++++++++++++++++++++++++++${widget.screenName} VISIBLE +++++++++++++++++++++++++++++++++++++++++++++++++++++++',
-            // );
             SessionReplay.instance.start();
             SessionReplay.instance.captureKey = _globalKey;
             if (Tracking.instance.visitedScreensList.isNotEmpty) {

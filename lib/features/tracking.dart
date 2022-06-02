@@ -11,19 +11,16 @@ class Tracking {
   static Tracking get instance => _instance;
 
   final DecibelSdkApi _apiInstance = DecibelSdkApi();
-  // String lastVisitedScreenName = '';
-  // int lastVisitedScreenId = 0;
+
   List<ScreenVisited> visitedScreensList = List.empty(growable: true);
 
   Future<void> startScreen(String name) async {
-    // debugPrint('start Screen $name');
     final int timestamp = DateTime.now().millisecondsSinceEpoch;
     final ScreenVisited screenVisited = ScreenVisited(timestamp, name);
 
     visitedScreensList.add(
       screenVisited,
     );
-    //debugPrint('startScreen $name $lastVisitedScreenId');
     await _apiInstance.startScreen(
       StartScreenMessage()
         ..screenName = screenVisited.name
@@ -36,7 +33,6 @@ class Tracking {
   }
 
   Future<void> endScreen(ScreenVisited lastVisitedScreen) async {
-    // debugPrint('end Screen ${lastVisitedScreen.name}');
     await _apiInstance.endScreen(
       EndScreenMessage()
         ..screenName = lastVisitedScreen.name

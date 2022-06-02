@@ -46,7 +46,6 @@ class SessionReplay {
     if (!isPageTransitioning &&
         captureKey != null &&
         captureKey!.currentContext != null) {
-      //debugPrint('forcing screenshot');
       await _captureImage(captureKey!.currentContext!);
     }
   }
@@ -112,9 +111,6 @@ class SessionReplay {
         if (resultImageData != null &&
             listEquals(_previousCoordsList, _currentCoordsList)) {
           if (_timer != null && !isPageTransitioning) {
-            //debugPrint(
-            //   'Saving screenshot ${Tracking.instance.visitedScreensList.last.name}-${Tracking.instance.visitedScreensList.last.id}',
-            // );
             await _sendScreenshot(
               resultImageData.buffer.asUint8List(),
               Tracking.instance.visitedScreensList.last.id,
