@@ -106,21 +106,4 @@ class DecibelSdk {
       ..value = value;
     await _api.sendGoal(goal);
   }
-
-  ///Listener for tabBar change of tab
-  static void tabControllerListener(
-    TabController tabController,
-    List<String> tabNames,
-  ) {
-    debugPrint("tabcontroller listener");
-    debugPrint(tabController.previousIndex.toString());
-    debugPrint('to');
-    debugPrint(tabController.index.toString());
-    SessionReplay.instance.isPageTransitioning = tabController.indexIsChanging;
-    if (tabController.index != tabController.previousIndex &&
-        !tabController.indexIsChanging) {
-      Tracking.instance.endScreen(tabNames[tabController.previousIndex]);
-      Tracking.instance.startScreen(tabNames[tabController.index]);
-    }
-  }
 }

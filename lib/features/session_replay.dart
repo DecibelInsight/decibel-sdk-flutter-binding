@@ -19,7 +19,7 @@ class SessionReplay {
   final _oldWidgetsList = List.empty(growable: true);
   final _newWidgetsList = List.empty(growable: true);
   final _maskColor = Paint()..color = Colors.grey;
-  VoidCallback? unableToTakeScreenshotCallback;
+  void Function(VoidCallback)? postFrameCallback;
   bool isPageTransitioning = false;
   GlobalKey? captureKey;
   Timer? _timer;
@@ -29,12 +29,9 @@ class SessionReplay {
       _timer!.cancel();
     }
 
-    _timer ??= Timer.periodic(const Duration(milliseconds: 250), (_) async {
-      if (!isPageTransitioning && _didUiChange()) {
-        if (captureKey != null && captureKey!.currentContext != null) {
-          await _captureImage(captureKey!.currentContext!);
-        }
-      }
+    postFrameCallback?.call(maybeTakeScreenshot);
+    _timer = Timer.periodic(const Duration(milliseconds: 250), (_) async {
+      await maybeTakeScreenshot();
     });
   }
 
@@ -43,11 +40,25 @@ class SessionReplay {
     _timer = null;
   }
 
+  Future<void> maybeTakeScreenshot() async {
+    if (!isPageTransitioning && _didUiChange()) {
+      if (captureKey != null && captureKey!.currentContext != null) {
+        await _captureImage(captureKey!.currentContext!);
+      } else {
+        postFrameCallback?.call(forceTakeScreenshot);
+      }
+    }
+  }
+
   Future<void> forceTakeScreenshot() async {
     if (!isPageTransitioning &&
         captureKey != null &&
         captureKey!.currentContext != null) {
       await _captureImage(captureKey!.currentContext!);
+    } else {
+      Future.delayed(const Duration(milliseconds: 250), () async {
+        await SessionReplay.instance.forceTakeScreenshot();
+      });
     }
   }
 
@@ -85,19 +96,23 @@ class SessionReplay {
         Offset position = box.localToGlobal(Offset.zero);
         var newPosition = Offset(0, position.dy);
         late ui.Image image;
-        //handle assertion error: https://github.com/flutter/flutter/issues/22308
         try {
           image = await (renderObject as RenderRepaintBoundary).toImage();
         } catch (_) {
-          // debugPrint('Unable to capture Image, renderObject is repainting');
-          unableToTakeScreenshotCallback?.call();
+          postFrameCallback?.call(forceTakeScreenshot);
           return;
         }
         canvas.drawImage(image, newPosition, Paint());
         // Paint a rect in the widgets position to be masked
         final _previousCoordsList = List<Rect>.empty(growable: true);
-        //debugPrint('masks to apply ${widgetsToMaskList.length}');
         for (final globalKey in widgetsToMaskList) {
+          if (globalKey.globalPaintBounds == null) {
+            Future.delayed(const Duration(milliseconds: 100), () async {
+              postFrameCallback?.call(forceTakeScreenshot);
+            });
+
+            return;
+          }
           globalKey.globalPaintBounds?.let((it) {
             _previousCoordsList.add(it);
             canvas.drawRect(it, _maskColor);
@@ -110,6 +125,7 @@ class SessionReplay {
             await resultImage.toByteData(format: ui.ImageByteFormat.png);
 
         final _currentCoordsList = List<Rect>.empty(growable: true);
+
         for (final globalKey in widgetsToMaskList) {
           globalKey.globalPaintBounds?.let((it) {
             _currentCoordsList.add(it);

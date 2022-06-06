@@ -12,7 +12,12 @@ class ScreenWidget extends StatefulWidget {
     required this.screenName,
     this.tabController,
     this.tabNames,
-  });
+  })  : assert(tabController != null ? tabNames != null : tabNames == null,
+            'You either have to provide both tab related arguments, or none'),
+        assert(tabNames == null || tabNames.length > 0),
+        assert(tabController != null
+            ? tabController.length == tabNames?.length
+            : true);
 
   final Widget child;
   final String screenName;
@@ -29,9 +34,13 @@ class _ScreenWidgetState extends State<ScreenWidget>
   ModalRoute<Object?>? route;
 
   // Defining an internal function to be able to remove the listener
-  void _animationListener(status) {
-    SessionReplay.instance.isPageTransitioning =
-        status != AnimationStatus.completed;
+  void _animationListener(AnimationStatus status) {
+    if (status == AnimationStatus.completed ||
+        status == AnimationStatus.dismissed) {
+      SessionReplay.instance.isPageTransitioning = false;
+    } else {
+      SessionReplay.instance.isPageTransitioning = true;
+    }
   }
 
   @override
@@ -40,15 +49,20 @@ class _ScreenWidgetState extends State<ScreenWidget>
 
     SessionReplay.instance.stop();
     SessionReplay.instance.widgetsToMaskList.clear();
-    SessionReplay.instance.unableToTakeScreenshotCallback = () {};
+    SessionReplay.instance.postFrameCallback = (calback) {
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+        calback.call();
+      });
+      WidgetsBinding.instance!.ensureVisualUpdate();
+    };
     WidgetsBinding.instance!
       ..addObserver(this)
       ..addPostFrameCallback((_) async {
         route = ModalRoute.of(context);
         route?.animation?.addStatusListener(_animationListener);
       });
-    widget.tabController?.addListener(() => DecibelSdk.tabControllerListener(
-        widget.tabController!, widget.tabNames!));
+    widget.tabController?.addListener(() => Tracking.instance
+        .tabControllerListener(widget.tabController!, widget.tabNames!));
   }
 
   @override
@@ -56,10 +70,8 @@ class _ScreenWidgetState extends State<ScreenWidget>
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.resumed:
-        //debugPrint('AppLifecycleState resumed');
         break;
       case AppLifecycleState.paused:
-        //debugPrint('AppLifecycleState paused');
         break;
       default:
     }
@@ -69,8 +81,8 @@ class _ScreenWidgetState extends State<ScreenWidget>
   void dispose() {
     WidgetsBinding.instance!.removeObserver(this);
     route?.animation?.removeStatusListener(_animationListener);
-    widget.tabController?.removeListener(() => DecibelSdk.tabControllerListener(
-        widget.tabController!, widget.tabNames!));
+    widget.tabController?.removeListener(() => Tracking.instance
+        .tabControllerListener(widget.tabController!, widget.tabNames!));
 
     super.dispose();
   }
@@ -81,16 +93,26 @@ class _ScreenWidgetState extends State<ScreenWidget>
       key: UniqueKey(),
       onVisibilityChanged: (VisibilityInfo info) {
         if (info.visibleFraction != VisibilityConst.notVisible) {
+          //Checks if this screen was the last screen being recorded
+
+          late String currentScreenName;
+
+          if (widget.tabController != null) {
+            currentScreenName = widget.tabNames![widget.tabController!.index];
+          } else {
+            currentScreenName = widget.screenName;
+          }
           if (Tracking.instance.visitedScreensList.isEmpty ||
-              widget.screenName !=
+              currentScreenName !=
                   Tracking.instance.visitedScreensList.last.name) {
-            SessionReplay.instance.start();
             SessionReplay.instance.captureKey = _globalKey;
             if (Tracking.instance.visitedScreensList.isNotEmpty) {
               Tracking.instance
                   .endScreen(Tracking.instance.visitedScreensList.last);
             }
-            Tracking.instance.startScreen(widget.screenName);
+            Tracking.instance
+                .startScreen(currentScreenName, tabBarNames: widget.tabNames);
+            SessionReplay.instance.start();
           }
         }
       },
