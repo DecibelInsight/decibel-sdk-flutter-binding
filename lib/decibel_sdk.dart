@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:decibel_sdk/features/session_replay.dart';
+import 'package:decibel_sdk/features/tracking.dart';
 import 'package:decibel_sdk/messages.dart';
 import 'package:decibel_sdk/utility/enums.dart' as enums;
 import 'package:decibel_sdk/utility/extensions.dart';
@@ -104,10 +105,5 @@ class DecibelSdk {
       ..goal = goalName
       ..value = value;
     await _api.sendGoal(goal);
-  }
-
-  ///Listener for tabBar change of tab
-  static void tabControllerListener(TabController tabController) {
-    SessionReplay.instance.isPageTransitioning = tabController.indexIsChanging;
   }
 }
