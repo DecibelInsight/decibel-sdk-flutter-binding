@@ -20,7 +20,27 @@ class _MaskWidgetState extends State<MaskWidget> {
   void initState() {
     globalKey = GlobalKey();
     uniqueKey = UniqueKey();
+    addMask(globalKey);
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    removeMask(globalKey);
+  }
+
+  void addMask(GlobalKey globalKey) {
+    if (!SessionReplay.instance.widgetsToMaskList.contains(globalKey)) {
+      SessionReplay.instance.widgetsToMaskList.add(globalKey);
+    }
+  }
+
+  void removeMask(GlobalKey globalKey) {
+    if (SessionReplay.instance.widgetsToMaskList.contains(globalKey)) {
+      SessionReplay.instance.widgetsToMaskList.remove(globalKey);
+    }
   }
 
   @override
@@ -31,9 +51,9 @@ class _MaskWidgetState extends State<MaskWidget> {
         key: uniqueKey,
         onVisibilityChanged: (VisibilityInfo info) {
           if (info.visibleFraction == VisibilityConst.notVisible) {
-            SessionReplay.instance.widgetsToMaskList.remove(globalKey);
+            removeMask(globalKey);
           } else {
-            SessionReplay.instance.widgetsToMaskList.add(globalKey);
+            addMask(globalKey);
           }
         },
         child: widget.child,
