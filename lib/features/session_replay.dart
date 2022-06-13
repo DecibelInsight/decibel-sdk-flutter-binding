@@ -28,14 +28,16 @@ class SessionReplay {
     if (_timer != null && _timer!.isActive) {
       _timer!.cancel();
     }
-
-    postFrameCallback?.call(maybeTakeScreenshot);
-    _timer = Timer.periodic(const Duration(milliseconds: 250), (_) async {
+    debugPrint("start session replay");
+    _timer ??= Timer.periodic(const Duration(milliseconds: 250), (_) async {
       await maybeTakeScreenshot();
     });
+    postFrameCallback?.call(forceTakeScreenshot);
   }
 
   void stop() {
+    debugPrint("stop session replay");
+
     _timer?.cancel();
     _timer = null;
   }
@@ -134,7 +136,9 @@ class SessionReplay {
         // We compare these lists to check that the masks won't be misplaced
         if (resultImageData != null &&
             listEquals(_previousCoordsList, _currentCoordsList)) {
-          if (_timer != null && !isPageTransitioning) {
+          if (!isPageTransitioning) {
+            debugPrint(
+                "---------------------SCREENSHOT ${Tracking.instance.visitedScreensList.last.name} - ${Tracking.instance.visitedScreensList.last.id}-------------------------");
             await _sendScreenshot(
               resultImageData.buffer.asUint8List(),
               Tracking.instance.visitedScreensList.last.id,

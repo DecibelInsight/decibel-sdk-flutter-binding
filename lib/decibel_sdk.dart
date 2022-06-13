@@ -4,6 +4,8 @@ import 'package:decibel_sdk/features/session_replay.dart';
 import 'package:decibel_sdk/messages.dart';
 import 'package:decibel_sdk/utility/enums.dart' as enums;
 import 'package:decibel_sdk/utility/extensions.dart';
+import 'package:decibel_sdk/utility/navigation_observer.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:yaml/yaml.dart';
 
@@ -14,6 +16,11 @@ class DecibelSdk {
   static DecibelSdkApi get _api {
     return _apiInstance ??= DecibelSdkApi();
   }
+
+  static RouteObserver<ModalRoute<void>> routeObserver =
+      RouteObserver<ModalRoute<void>>();
+
+  static MyRouteObserver navigationObserver = MyRouteObserver();
 
   /// Initializes DecibelSdk
   static Future<void> initialize(

@@ -29,7 +29,7 @@ class ScreenWidget extends StatefulWidget {
 }
 
 class _ScreenWidgetState extends State<ScreenWidget>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, RouteAware {
   final GlobalKey _globalKey = GlobalKey();
   ModalRoute<Object?>? route;
 
@@ -41,6 +41,12 @@ class _ScreenWidgetState extends State<ScreenWidget>
     } else {
       SessionReplay.instance.isPageTransitioning = true;
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    DecibelSdk.routeObserver.subscribe(this, ModalRoute.of(context)!);
   }
 
   @override
@@ -79,6 +85,7 @@ class _ScreenWidgetState extends State<ScreenWidget>
 
   @override
   void dispose() {
+    DecibelSdk.routeObserver.unsubscribe(this);
     WidgetsBinding.instance!.removeObserver(this);
     route?.animation?.removeStatusListener(_animationListener);
     widget.tabController?.removeListener(() => Tracking.instance
@@ -88,38 +95,58 @@ class _ScreenWidgetState extends State<ScreenWidget>
   }
 
   @override
+  void didPush() {
+    print('didPush ${widget.screenName}');
+    callWhenIsCurrentRoute();
+  }
+
+  @override
+  void didPopNext() {
+    print('didPopNext ${widget.screenName}');
+    callWhenIsCurrentRoute();
+  }
+
+  @override
+  void didPop() {
+    print('didPop ${widget.screenName}');
+    callWhenIsNotCurrentRoute();
+  }
+
+  @override
+  void didPushNext() {
+    print('didPushNext ${widget.screenName}');
+    // callWhenIsNotCurrentRoute();
+  }
+
+  void callWhenIsNotCurrentRoute() {
+    SessionReplay.instance.stop();
+  }
+
+  void callWhenIsCurrentRoute() {
+    late String currentScreenName;
+
+    if (widget.tabController != null) {
+      currentScreenName = widget.tabNames![widget.tabController!.index];
+    } else {
+      currentScreenName = widget.screenName;
+    }
+    if (Tracking.instance.visitedScreensList.isEmpty ||
+        currentScreenName != Tracking.instance.visitedScreensList.last.name) {
+      SessionReplay.instance.captureKey = _globalKey;
+      if (Tracking.instance.visitedScreensList.isNotEmpty) {
+        Tracking.instance.endScreen(Tracking.instance.visitedScreensList.last);
+      }
+      Tracking.instance
+          .startScreen(currentScreenName, tabBarNames: widget.tabNames);
+      SessionReplay.instance.start();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return VisibilityDetector(
-      key: UniqueKey(),
-      onVisibilityChanged: (VisibilityInfo info) {
-        if (info.visibleFraction != VisibilityConst.notVisible) {
-          //Checks if this screen was the last screen being recorded
-
-          late String currentScreenName;
-
-          if (widget.tabController != null) {
-            currentScreenName = widget.tabNames![widget.tabController!.index];
-          } else {
-            currentScreenName = widget.screenName;
-          }
-          if (Tracking.instance.visitedScreensList.isEmpty ||
-              currentScreenName !=
-                  Tracking.instance.visitedScreensList.last.name) {
-            SessionReplay.instance.captureKey = _globalKey;
-            if (Tracking.instance.visitedScreensList.isNotEmpty) {
-              Tracking.instance
-                  .endScreen(Tracking.instance.visitedScreensList.last);
-            }
-            Tracking.instance
-                .startScreen(currentScreenName, tabBarNames: widget.tabNames);
-            SessionReplay.instance.start();
-          }
-        }
-      },
-      child: RepaintBoundary(
-        key: _globalKey,
-        child: widget.child,
-      ),
+    return RepaintBoundary(
+      key: _globalKey,
+      child: widget.child,
     );
   }
 }
