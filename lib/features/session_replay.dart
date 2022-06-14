@@ -28,16 +28,12 @@ class SessionReplay {
     if (_timer != null && _timer!.isActive) {
       _timer!.cancel();
     }
-    debugPrint("start session replay");
     _timer ??= Timer.periodic(const Duration(milliseconds: 250), (_) async {
       await maybeTakeScreenshot();
     });
-    // postFrameCallback?.call(forceTakeScreenshot);
   }
 
   void stop() {
-    debugPrint("stop session replay");
-
     _timer?.cancel();
     _timer = null;
   }
@@ -118,7 +114,6 @@ class SessionReplay {
 
             return;
           }
-          print("mask ${globalKey.hashCode}");
           globalKey.globalPaintBounds?.let((it) {
             _previousCoordsList.add(it);
             canvas.drawRect(it, _maskColor);
@@ -141,8 +136,6 @@ class SessionReplay {
         if (resultImageData != null &&
             listEquals(_previousCoordsList, _currentCoordsList)) {
           if (!isPageTransitioning && _timer != null) {
-            debugPrint(
-                "---------------------SCREENSHOT ${Tracking.instance.visitedScreensList.last.name} - ${Tracking.instance.visitedScreensList.last.id}-------------------------");
             await _sendScreenshot(
               resultImageData.buffer.asUint8List(),
               Tracking.instance.visitedScreensList.last.id,

@@ -102,13 +102,11 @@ class _ScreenWidgetState extends State<ScreenWidget>
 
   @override
   void didPush() {
-    print('didPush ${widget.screenName}');
     callWhenIsCurrentRoute();
   }
 
   @override
   void didPopNext() {
-    print('didPopNext ${widget.screenName}');
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       callWhenIsCurrentRoute();
     });
@@ -117,13 +115,11 @@ class _ScreenWidgetState extends State<ScreenWidget>
 
   @override
   void didPop() {
-    print('didPop ${widget.screenName}');
     callWhenIsNotCurrentRoute();
   }
 
   @override
   void didPushNext() {
-    print('didPushNext ${widget.screenName}');
     callWhenIsNotCurrentRoute();
   }
 

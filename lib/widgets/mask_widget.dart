@@ -14,12 +14,10 @@ class MaskWidget extends StatefulWidget {
 
 class _MaskWidgetState extends State<MaskWidget> with RouteAware {
   late GlobalKey globalKey;
-  // late UniqueKey uniqueKey;
 
   @override
   void initState() {
     globalKey = GlobalKey();
-    // uniqueKey = UniqueKey();
     addMask(globalKey);
 
     super.initState();
@@ -40,28 +38,23 @@ class _MaskWidgetState extends State<MaskWidget> with RouteAware {
 
   @override
   void didPush() {
-    print('didPush mask ${globalKey.hashCode}');
     addMask(globalKey);
   }
 
   @override
   void didPopNext() {
-    print('didPopNext mask ${globalKey.hashCode}');
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       addMask(globalKey);
     });
-    // WidgetsBinding.instance!.ensureVisualUpdate();
   }
 
   @override
   void didPop() {
-    print('didPop mask ${globalKey.hashCode}');
     removeMask(globalKey);
   }
 
   @override
   void didPushNext() {
-    print('didPushNext mask ${globalKey.hashCode}');
     removeMask(globalKey);
   }
 
