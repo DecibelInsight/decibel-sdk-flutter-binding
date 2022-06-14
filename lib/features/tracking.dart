@@ -22,6 +22,8 @@ class Tracking {
   }
 
   Future<void> startScreen(String name, {List<String>? tabBarNames}) async {
+    debugPrint('Start SCREEN $name');
+
     final int timestamp = DateTime.now().millisecondsSinceEpoch;
 
     late ScreenVisited screenVisited;
@@ -44,6 +46,7 @@ class Tracking {
   }
 
   Future<void> endScreen(ScreenVisited lastVisitedScreen) async {
+    debugPrint('END SCREEN ${lastVisitedScreen.name}');
     await _apiInstance.endScreen(
       EndScreenMessage()
         ..screenName = lastVisitedScreen.name
@@ -57,14 +60,17 @@ class Tracking {
     TabController tabController,
     List<String> tabNames,
   ) {
+    debugPrint(tabController.hashCode.toString());
     SessionReplay.instance.isPageTransitioning = tabController.indexIsChanging;
     if (tabController.index != tabController.previousIndex &&
         !tabController.indexIsChanging) {
       SessionReplay.instance.stop();
-      Tracking.instance.endScreen(
-        Tracking.instance.visitedScreensList.last
-            .tabBarScreens[tabController.previousIndex],
-      );
+      if (Tracking.instance.visitedScreensList.last.isTabBar) {
+        Tracking.instance.endScreen(
+          Tracking.instance.visitedScreensList.last
+              .tabBarScreens[tabController.previousIndex],
+        );
+      }
 
       Tracking.instance
           .startScreen(tabNames[tabController.index], tabBarNames: tabNames);

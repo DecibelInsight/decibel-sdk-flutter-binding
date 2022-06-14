@@ -32,7 +32,7 @@ class SessionReplay {
     _timer ??= Timer.periodic(const Duration(milliseconds: 250), (_) async {
       await maybeTakeScreenshot();
     });
-    postFrameCallback?.call(forceTakeScreenshot);
+    // postFrameCallback?.call(forceTakeScreenshot);
   }
 
   void stop() {
@@ -56,6 +56,7 @@ class SessionReplay {
     if (!isPageTransitioning &&
         captureKey != null &&
         captureKey!.currentContext != null) {
+      _didUiChange(compare: false);
       await _captureImage(captureKey!.currentContext!);
     } else {
       Future.delayed(const Duration(milliseconds: 250), () async {
@@ -64,7 +65,7 @@ class SessionReplay {
     }
   }
 
-  bool _didUiChange() {
+  bool _didUiChange({bool compare = true}) {
     bool didUiChange = false;
     void findChildren(List<Element> list) {
       for (final child in list) {
@@ -75,7 +76,9 @@ class SessionReplay {
 
     if (WidgetsBinding.instance?.renderViewElement != null) {
       findChildren(WidgetsBinding.instance!.renderViewElement!.children);
-      didUiChange = !listEquals(_oldWidgetsList, _newWidgetsList);
+      if (compare) {
+        didUiChange = !listEquals(_oldWidgetsList, _newWidgetsList);
+      }
       _oldWidgetsList.clear();
       _oldWidgetsList.addAll(_newWidgetsList);
       _newWidgetsList.clear();
@@ -115,6 +118,7 @@ class SessionReplay {
 
             return;
           }
+          print("mask ${globalKey.hashCode}");
           globalKey.globalPaintBounds?.let((it) {
             _previousCoordsList.add(it);
             canvas.drawRect(it, _maskColor);
@@ -136,7 +140,7 @@ class SessionReplay {
         // We compare these lists to check that the masks won't be misplaced
         if (resultImageData != null &&
             listEquals(_previousCoordsList, _currentCoordsList)) {
-          if (!isPageTransitioning) {
+          if (!isPageTransitioning && _timer != null) {
             debugPrint(
                 "---------------------SCREENSHOT ${Tracking.instance.visitedScreensList.last.name} - ${Tracking.instance.visitedScreensList.last.id}-------------------------");
             await _sendScreenshot(

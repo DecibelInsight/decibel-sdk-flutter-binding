@@ -4,7 +4,6 @@ import 'package:decibel_sdk/features/tracking.dart';
 import 'package:decibel_sdk/utility/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 class ScreenWidget extends StatefulWidget {
   const ScreenWidget({
@@ -40,6 +39,13 @@ class _ScreenWidgetState extends State<ScreenWidget>
       SessionReplay.instance.isPageTransitioning = false;
     } else {
       SessionReplay.instance.isPageTransitioning = true;
+    }
+  }
+
+  void _popAnimationListener(AnimationStatus status) {
+    if (status == AnimationStatus.completed ||
+        status == AnimationStatus.dismissed) {
+      callWhenIsCurrentRoute();
     }
   }
 
@@ -88,9 +94,9 @@ class _ScreenWidgetState extends State<ScreenWidget>
     DecibelSdk.routeObserver.unsubscribe(this);
     WidgetsBinding.instance!.removeObserver(this);
     route?.animation?.removeStatusListener(_animationListener);
+    route?.animation?.removeStatusListener(_popAnimationListener);
     widget.tabController?.removeListener(() => Tracking.instance
         .tabControllerListener(widget.tabController!, widget.tabNames!));
-
     super.dispose();
   }
 
@@ -103,7 +109,10 @@ class _ScreenWidgetState extends State<ScreenWidget>
   @override
   void didPopNext() {
     print('didPopNext ${widget.screenName}');
-    callWhenIsCurrentRoute();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      callWhenIsCurrentRoute();
+    });
+    // WidgetsBinding.instance!.ensureVisualUpdate();
   }
 
   @override
@@ -115,7 +124,7 @@ class _ScreenWidgetState extends State<ScreenWidget>
   @override
   void didPushNext() {
     print('didPushNext ${widget.screenName}');
-    // callWhenIsNotCurrentRoute();
+    callWhenIsNotCurrentRoute();
   }
 
   void callWhenIsNotCurrentRoute() {
@@ -130,16 +139,14 @@ class _ScreenWidgetState extends State<ScreenWidget>
     } else {
       currentScreenName = widget.screenName;
     }
-    if (Tracking.instance.visitedScreensList.isEmpty ||
-        currentScreenName != Tracking.instance.visitedScreensList.last.name) {
-      SessionReplay.instance.captureKey = _globalKey;
-      if (Tracking.instance.visitedScreensList.isNotEmpty) {
-        Tracking.instance.endScreen(Tracking.instance.visitedScreensList.last);
-      }
-      Tracking.instance
-          .startScreen(currentScreenName, tabBarNames: widget.tabNames);
-      SessionReplay.instance.start();
+
+    SessionReplay.instance.captureKey = _globalKey;
+    if (Tracking.instance.visitedScreensList.isNotEmpty) {
+      Tracking.instance.endScreen(Tracking.instance.visitedScreensList.last);
     }
+    Tracking.instance
+        .startScreen(currentScreenName, tabBarNames: widget.tabNames);
+    SessionReplay.instance.start();
   }
 
   @override
