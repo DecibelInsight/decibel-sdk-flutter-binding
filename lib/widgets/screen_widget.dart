@@ -42,13 +42,6 @@ class _ScreenWidgetState extends State<ScreenWidget>
     }
   }
 
-  void _popAnimationListener(AnimationStatus status) {
-    if (status == AnimationStatus.completed ||
-        status == AnimationStatus.dismissed) {
-      callWhenIsCurrentRoute();
-    }
-  }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -94,7 +87,6 @@ class _ScreenWidgetState extends State<ScreenWidget>
     DecibelSdk.routeObserver.unsubscribe(this);
     WidgetsBinding.instance!.removeObserver(this);
     route?.animation?.removeStatusListener(_animationListener);
-    route?.animation?.removeStatusListener(_popAnimationListener);
     widget.tabController?.removeListener(() => Tracking.instance
         .tabControllerListener(widget.tabController!, widget.tabNames!));
     super.dispose();
