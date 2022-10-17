@@ -2,24 +2,18 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:decibel_sdk/src/features/frame_tracking.dart';
 import 'package:decibel_sdk/src/features/tracking.dart';
 import 'package:decibel_sdk/src/messages.dart';
 import 'package:decibel_sdk/src/utility/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+part 'frame_tracking.dart';
 
 class SessionReplay {
-  SessionReplay._internal() {
-    _frameTracking = FrameTracking(
-      postFrameCallback: WidgetsBindingNullSafe.instance!.addPostFrameCallback,
-    )..newFrameStreamController.stream.listen((timeStamp) {
-        _didUiChange = true;
-      });
-  }
+  SessionReplay._internal() : _frameTracking = _FrameTracking();
   static final _instance = SessionReplay._internal();
   static SessionReplay get instance => _instance;
-  late FrameTracking _frameTracking;
+  final _FrameTracking _frameTracking;
   final DecibelSdkApi _apiInstance = DecibelSdkApi();
   final widgetsToMaskList = List<GlobalKey>.empty(growable: true);
   final _maskColor = Paint()..color = Colors.grey;
@@ -35,8 +29,8 @@ class SessionReplay {
   BuildContext? popupRouteContext;
   Timer? _timer;
   bool _didUiChange = false;
-  bool get didUiChange => _didUiChange;
-  set didUiChange(bool change) {
+  bool get uiChange => _didUiChange;
+  set uiChange(bool change) {
     _didUiChange = change;
     if (!change) {
       _frameTracking.waitForNextFrame();
@@ -53,7 +47,7 @@ class SessionReplay {
       !isInPopupRoute ? captureKey?.currentContext : popupRouteContext;
 
   Future<void> start() async {
-    didUiChange = true;
+    _frameTracking.waitForNextFrame();
     if (_timer != null && _timer!.isActive) {
       stop();
     }
@@ -76,7 +70,7 @@ class SessionReplay {
   }
 
   Future<void> maybeTakeScreenshot() async {
-    if (didUiChange) {
+    if (uiChange) {
       await forceTakeScreenshot();
     }
   }
@@ -121,7 +115,7 @@ class SessionReplay {
       final bool isTabBar = Tracking.instance.visitedScreensList.last.isTabBar;
       late ui.Image image;
       try {
-        didUiChange = false;
+        uiChange = false;
         image = await (renderObject as RenderRepaintBoundary).toImage();
       } catch (_) {
         _forceScreenshotNextFrame();
