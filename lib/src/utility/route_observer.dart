@@ -12,9 +12,11 @@ class MyRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     if (route is! PopupRoute) {
-      (route as ModalRoute).animation?.addStatusListener((status) {
-        _animationListener(status, route);
-      });
+      if (route is ModalRoute) {
+        route.animation?.addStatusListener((status) {
+          _animationListener(status, route);
+        });
+      }
     }
     if (route is PopupRoute) {
       if (previousRoute != null) {
@@ -47,9 +49,11 @@ class MyRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     if (route is! PopupRoute) {
-      (route as ModalRoute).animation?.addStatusListener((status) {
-        _animationListener(status, route);
-      });
+      if (route is ModalRoute) {
+        route.animation?.addStatusListener((status) {
+          _animationListener(status, route);
+        });
+      }
     }
     if (route is PopupRoute) {
       SessionReplay.instance.isInPopupRoute = false;
@@ -61,9 +65,11 @@ class MyRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   @override
   void didRemove(Route route, Route? previousRoute) {
     if (route is! PopupRoute) {
-      (route as ModalRoute).animation?.addStatusListener((status) {
-        _animationListener(status, route);
-      });
+      if (route is ModalRoute) {
+        route.animation?.addStatusListener((status) {
+          _animationListener(status, route);
+        });
+      }
     }
     super.didRemove(route, previousRoute);
   }
