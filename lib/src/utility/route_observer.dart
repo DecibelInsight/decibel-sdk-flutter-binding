@@ -20,17 +20,20 @@ class MyRouteObserver extends RouteObserver<PageRoute<dynamic>> {
     }
     if (route is PopupRoute) {
       if (previousRoute != null) {
-        final BuildContext context =
-            (previousRoute as PageRoute).subtreeContext!;
-        context.visitChildElements((element) {
-          if (element.containsScreenWidget()) {
-            WidgetsBindingNullSafe.instance!.addPostFrameCallback((timeStamp) {
-              SessionReplay.instance.isInPopupRoute = true;
-              SessionReplay.instance.popupRouteContext = route.subtreeContext!;
-              SessionReplay.instance.start();
-            });
-          }
-        });
+        if (previousRoute is PageRoute) {
+          final BuildContext context = previousRoute.subtreeContext!;
+          context.visitChildElements((element) {
+            if (element.containsScreenWidget()) {
+              WidgetsBindingNullSafe.instance!
+                  .addPostFrameCallback((timeStamp) {
+                SessionReplay.instance.isInPopupRoute = true;
+                SessionReplay.instance.popupRouteContext =
+                    route.subtreeContext!;
+                SessionReplay.instance.start();
+              });
+            }
+          });
+        }
       }
     }
     super.didPush(route, previousRoute);
