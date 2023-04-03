@@ -1,4 +1,5 @@
-import 'package:decibel_sdk/src/features/tracking.dart';
+import 'package:decibel_sdk/src/features/tracking/screen_visited.dart';
+import 'package:decibel_sdk/src/features/tracking/tracking.dart';
 import 'package:decibel_sdk/src/utility/constants.dart';
 import 'package:decibel_sdk/src/utility/enums.dart';
 import 'package:decibel_sdk/src/widgets/screen_widget/screen_widget.dart';
@@ -56,7 +57,7 @@ extension RenderObjectPaintBounds on RenderObject {
   }
 }
 
-extension ListDecibelCustomerConsentTypeExt
+extension ListMedalliaDxaCustomerConsentTypeExt
     on List<DecibelCustomerConsentType> {
   List<int> toIndexList() {
     return map((consent) => consent.index).toList();
@@ -120,4 +121,27 @@ extension ScreenVisitedExt on ScreenVisited {
 
   int get maximumDurationForLastScreenshot =>
       timestamp + SDKConstants.maxReplayDurationPerScreen.inMilliseconds;
+
+  ///Checks if this screenVisited is the tab with the given a id or the parent
+  ///TabBar of this screen has the same id
+  bool isTabBarWithId(String screenId) {
+    if (isTabBar) {
+      //first conditional for when we have the screenId of the tab
+      //second one for when we have only the id for the parent TabBar
+      return (this as ScreenVisitedTabBar).id == screenId ||
+          (this as ScreenVisitedTabBar).tabBarId == screenId;
+    }
+    return false;
+  }
+
+  ///If this screenVisited is a tabBar, it returns the screenVisited as a
+  ///ScreenVisitedTabBar type
+  ScreenVisitedTabBar? maybeScreenVisitedTabBar(String screenId) {
+    final bool isTabBarWithId = this.isTabBarWithId(screenId);
+    if (isTabBarWithId) {
+      return this as ScreenVisitedTabBar;
+    } else {
+      return null;
+    }
+  }
 }
