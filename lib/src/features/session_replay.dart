@@ -123,7 +123,7 @@ class SessionReplay {
       );
     }
 
-    if (_tracking.isPageTransitioning ||
+    if (_tracking.areThereOngoingAnimations ||
         !currentTrackedScreen.widgetInTheTree) {
       return _forceScreenshotNextFrame();
     }
@@ -137,6 +137,10 @@ class SessionReplay {
       await widgetsBindingInstance.endOfFrame;
       _waitingForEndOfFrame = false;
       if (!_currentlyTracking) return;
+      if (_tracking.areThereOngoingAnimations ||
+          !currentTrackedScreen.widgetInTheTree) {
+        return _forceScreenshotNextFrame();
+      }
     }
     final int screenShotId = currentTrackedScreen.uniqueId;
     final String screenShotName = currentTrackedScreen.name;

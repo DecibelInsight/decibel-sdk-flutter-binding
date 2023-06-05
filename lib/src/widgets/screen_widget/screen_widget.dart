@@ -243,6 +243,13 @@ class _ActiveScreenWidgetState extends State<_ActiveScreenWidget>
 
     super.didChangeDependencies();
     route = ModalRoute.of(context);
+    if (route == null) return;
+    assert(
+      widget.isPopup ? route is RawDialogRoute : route is! RawDialogRoute,
+      route is RawDialogRoute
+          ? 'Please use ScreenWidget.popup in screens with routes of type RawDialogRoutes'
+          : "Don't use ScreenWidget.popup in screens whith routes different than type RawDialogRoutes",
+    );
     CustomRouteObserver.screenWidgetRouteObserver.subscribe(this, route!);
   }
 
@@ -253,17 +260,7 @@ class _ActiveScreenWidgetState extends State<_ActiveScreenWidget>
     super.initState();
     tracking.physicalSize =
         WidgetsBindingNullSafe.instance!.window.physicalSize;
-    WidgetsBindingNullSafe.instance!
-      ..addObserver(this)
-      ..addPostFrameCallback((_) async {
-        route = ModalRoute.of(context);
-        assert(
-          widget.isPopup ? route is RawDialogRoute : route is! RawDialogRoute,
-          route is RawDialogRoute
-              ? 'Please use ScreenWidget.popup in screens with routes of type RawDialogRoutes'
-              : "Don't use ScreenWidget.popup in screens whith routes different than type RawDialogRoutes",
-        );
-      });
+    WidgetsBindingNullSafe.instance!.addObserver(this);
     currentIndex = widget.manualTabBarInitialIndex;
     widget.tabController?.addListener(_tabControllerListener);
   }
@@ -336,7 +333,6 @@ class _ActiveScreenWidgetState extends State<_ActiveScreenWidget>
   void didPopNext() {
     logger.d('didPopNext');
 
-    route = ModalRoute.of(context);
     if (route?.isCurrent ?? false) {
       callWhenIsCurrentRoute();
     }
