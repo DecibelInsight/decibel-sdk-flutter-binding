@@ -10,14 +10,18 @@ class TrackingCompleter {
   Future<void> startScreenTasksCompleterWrapper(
     Future<void> Function() function,
   ) async {
+    final List<Completer<dynamic>> startScreenEnqued =
+        List.from(tracking.startScreenEnquedCompleterList);
+
+    final Completer completer = Completer();
+    tracking.startScreenEnquedCompleterList.add(completer);
     await Future.wait(
-      tracking.startScreenEnquedCompleterList.map((e) {
+      startScreenEnqued.map((e) {
         return e.future;
       }),
     );
-    tracking.startScreenEnquedCompleterList.clear();
-    final Completer completer = Completer();
-    tracking.startScreenEnquedCompleterList.add(completer);
+    tracking.startScreenEnquedCompleterList
+        .removeWhere((completer) => completer.isCompleted);
     await function.call();
     completer.complete();
   }
