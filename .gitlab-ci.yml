@@ -38,7 +38,6 @@ git_deploy:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - ssh-keyscan github.com >> ~/.ssh/known_hosts
-    - git config --global user.name ${USER_SDK}
     - git remote add github git@github.com:DecibelInsight/decibel-sdk-flutter-binding.git || true
     - git checkout -b master
     - git push -u github master
