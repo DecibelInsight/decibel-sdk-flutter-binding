@@ -24,6 +24,8 @@ void main() {
   late MockFrameTracking mockFrameTracking;
   late MockPlaceholderImageConfig mockPlaceholderImageConfig;
   late MockTracking mockTracking;
+  late MockCustomRouteObserver mockCustomRouteObserver;
+
   late dynamic Function(
     String yaml,
   ) loadYaml;
@@ -46,7 +48,7 @@ void main() {
     mockFrameTracking = MockFrameTracking();
     mockPlaceholderImageConfig = MockPlaceholderImageConfig();
     mockTracking = MockTracking();
-
+    mockCustomRouteObserver = MockCustomRouteObserver();
     medalliaDxaConfig = MedalliaDxaConfig.testing(
       mockApi,
       loadYaml,
@@ -55,6 +57,7 @@ void main() {
       mockSessionReplay,
       mockHttpErrors,
       mockLoggerSDK,
+      mockCustomRouteObserver,
       mockAutoMasking,
       mockFrameTracking,
       mockPlaceholderImageConfig,

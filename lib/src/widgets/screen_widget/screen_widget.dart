@@ -174,16 +174,21 @@ class _ActiveScreenWidget extends StatefulWidget {
 }
 
 class _ActiveScreenWidgetState extends State<_ActiveScreenWidget>
-    with WidgetsBindingObserver, RouteAware {
+    with WidgetsBindingObserver, RouteAware, RouteAwareOtherNavigators {
   final GlobalKey _globalKey = GlobalKey();
   final List<GlobalKey> listOfMasks = [];
   late final Logger logger =
       DependencyInjector.instance.loggerSdk.screenWidgetLogger;
   late final Tracking tracking = DependencyInjector.instance.tracking;
+  late final CustomRouteObserver customRouteObserver =
+      DependencyInjector.instance.customRouteObserver;
   int get screenId => _globalKey.hashCode;
   bool get isTabBar => widget.tabNames != null && widget.tabController != null;
+  @override
+  Route? get routeGetter => route;
   ModalRoute<Object?>? route;
   int? currentIndex;
+  RouteObserver? widgetRouteObserverForNavigator;
 
   Future<void> newScreenHandler(int index) async {
     logger.d('New Screen Handler index: $index');
@@ -250,7 +255,16 @@ class _ActiveScreenWidgetState extends State<_ActiveScreenWidget>
           ? 'Please use ScreenWidget.popup in screens with routes of type RawDialogRoutes'
           : "Don't use ScreenWidget.popup in screens whith routes different than type RawDialogRoutes",
     );
-    CustomRouteObserver.screenWidgetRouteObserver.subscribe(this, route!);
+    final NavigatorState? widgetNavigator = Navigator.maybeOf(context);
+
+    if (widgetNavigator != null) {
+      final observer = customRouteObserver
+          .observerToSubscribeFromWidget(widgetNavigator, isScreenWidget: true);
+      observer?.subscribe(this, route!);
+      widgetRouteObserverForNavigator = observer;
+      customRouteObserver.thisWidgetHasSubscribedToThisRoute(this, route!);
+      customRouteObserver.routeObserverOtherNavigators.subscribe(this);
+    }
   }
 
   @override
@@ -316,7 +330,16 @@ class _ActiveScreenWidgetState extends State<_ActiveScreenWidget>
     logger.d('dispose');
 
     callWhenIsNotCurrentRoute();
-    CustomRouteObserver.screenWidgetRouteObserver.unsubscribe(this);
+    widgetRouteObserverForNavigator?.unsubscribe(this);
+    if (widgetRouteObserverForNavigator != null) {
+      customRouteObserver.removeObserverFromObserversForWidgetDispatchList(
+        widgetRouteObserverForNavigator!,
+      );
+    }
+    customRouteObserver.routeObserverOtherNavigators.unsubscribe(this);
+    if (route != null) {
+      customRouteObserver.thisWidgetHasUnsubscribedToThisRoute(this, route!);
+    }
     WidgetsBindingNullSafe.instance!.removeObserver(this);
     widget.tabController?.removeListener(_tabControllerListener);
     super.dispose();
@@ -325,7 +348,9 @@ class _ActiveScreenWidgetState extends State<_ActiveScreenWidget>
   @override
   void didPush() {
     logger.d('didPush');
-
+    if (route?.isCurrent != null && route!.isCurrent == false) {
+      return;
+    }
     callWhenIsCurrentRoute();
   }
 
@@ -348,6 +373,18 @@ class _ActiveScreenWidgetState extends State<_ActiveScreenWidget>
   @override
   void didPushNext() {
     logger.d('didPushNext');
+    callWhenIsNotCurrentRoute();
+  }
+
+  @override
+  void inRoute() {
+    if (route?.isCurrent ?? false) {
+      callWhenIsCurrentRoute();
+    }
+  }
+
+  @override
+  void outsideRoute() {
     callWhenIsNotCurrentRoute();
   }
 

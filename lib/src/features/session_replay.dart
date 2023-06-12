@@ -142,6 +142,10 @@ class SessionReplay {
         return _forceScreenshotNextFrame();
       }
     }
+    if (!isFrameTimeWindowSafe) {
+      _forceScreenshotNextFrame();
+      return;
+    }
     final int screenShotId = currentTrackedScreen.uniqueId;
     final String screenShotName = currentTrackedScreen.name;
     final int startFocusTime = DateTime.now().millisecondsSinceEpoch;
@@ -236,6 +240,18 @@ class SessionReplay {
       screenVisited,
     );
   }
+
+  bool get isFrameTimeWindowSafe {
+    bool safeZone = true;
+    try {
+      schedulerBindingInstance.currentFrameTimeStamp;
+    } catch (e) {
+      if (schedulerBindingInstance.hasScheduledFrame) {
+        safeZone = false;
+      }
+    }
+    return safeZone;
+  }
 }
 
 @visibleForTesting
@@ -270,7 +286,7 @@ class ScreenshotTaker with TrackingCompleter {
     if (renderObject != null) {
       final Rect frame = renderObject.globalPaintBounds;
 
-      final Offset newPosition = Offset(0, frame.top);
+      final Offset newPosition = Offset(frame.left, frame.top);
       // final int startFocusTime = DateTime.now().millisecondsSinceEpoch;
 
       late ui.Image image;
