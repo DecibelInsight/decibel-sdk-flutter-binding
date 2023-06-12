@@ -31,7 +31,9 @@ class MedalliaDxaConfig {
       : _nativeApi = MedalliaDxaNativeApi(),
         _loadYaml = yaml_parser.loadYaml,
         _rootBundle = services.rootBundle,
-        _loggerSDK = LoggerSDK.instance {
+        _loggerSDK = LoggerSDK.instance,
+        _customRouteObserver =
+            CustomRouteObserver(RouteObserverOtherNavigators()) {
     final frameTracking = FrameTracking(
       postFrameCallback: WidgetsBindingNullSafe.instance!.addPostFrameCallback,
     );
@@ -40,8 +42,9 @@ class MedalliaDxaConfig {
     final WidgetsBinding widgetsBinding = WidgetsBindingNullSafe.instance!;
     final SchedulerBinding schedulerBinding =
         SchedulerBindingNullSafe.instance!;
-    final ScreenshotTaker screenshotTaker =
-        ScreenshotTaker(autoMasking: autoMasking);
+    final ScreenshotTaker screenshotTaker = ScreenshotTaker(
+      autoMasking: autoMasking,
+    );
     _sessionReplay = SessionReplay(
       this,
       _loggerSDK,
@@ -69,6 +72,7 @@ class MedalliaDxaConfig {
       placeholderImageConfig: placeholderImageConfig,
       tracking: tracking,
       sessionReplay: _sessionReplay,
+      customRouteObserver: _customRouteObserver,
     );
   }
   @visibleForTesting
@@ -80,6 +84,7 @@ class MedalliaDxaConfig {
     this._sessionReplay,
     this._httpErrors,
     this._loggerSDK,
+    this._customRouteObserver,
     AutoMasking autoMasking,
     FrameTracking frameTracking,
     PlaceholderImageConfig placeholderImageConfig,
@@ -94,6 +99,7 @@ class MedalliaDxaConfig {
       placeholderImageConfig: placeholderImageConfig,
       tracking: tracking,
       sessionReplay: _sessionReplay,
+      customRouteObserver: _customRouteObserver,
     );
   }
 
@@ -104,14 +110,11 @@ class MedalliaDxaConfig {
   ) _loadYaml;
   late SessionReplay _sessionReplay;
   final LoggerSDK _loggerSDK;
+  final CustomRouteObserver _customRouteObserver;
   late final GoalsAndDimensions _goalsAndDimensions;
   late final HttpErrors _httpErrors;
-  late final List<NavigatorObserver> _routeObserversToUse = [
-    CustomRouteObserver.screenWidgetRouteObserver,
-    CustomRouteObserver.routeAnimationObserver
-  ];
-  final List<NavigatorObserver> currentRouteObservers = [];
-
+  List<NavigatorObserver> get currentRouteObservers =>
+      initialized ? _customRouteObserver.getNewObservers() : [];
   bool _trackingAllowed = false;
   bool _recordingAllowed = false;
   void setRecordingAllowed(bool value) {
@@ -134,7 +137,6 @@ class MedalliaDxaConfig {
     List<enums.DecibelCustomerConsentType> consents,
   ) async {
     final String version = await _getVersion();
-    _setObservers();
     _setEnableConsentsForFlutter(consents);
     final sessionMessage = SessionMessage(
       account: account,
@@ -145,12 +147,6 @@ class MedalliaDxaConfig {
 
     await _nativeApi.initialize(sessionMessage);
     initialized = true;
-  }
-
-  void _setObservers() {
-    if (currentRouteObservers.isEmpty) {
-      currentRouteObservers.addAll(_routeObserversToUse);
-    }
   }
 
   Future<String> _getVersion() async {

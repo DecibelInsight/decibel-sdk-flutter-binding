@@ -5,28 +5,29 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i6;
 import 'dart:collection' as _i9;
-import 'dart:developer' as _i23;
-import 'dart:typed_data' as _i22;
+import 'dart:developer' as _i24;
+import 'dart:typed_data' as _i23;
 import 'dart:ui' as _i11;
 
 import 'package:decibel_sdk/src/decibel_config.dart' as _i10;
 import 'package:decibel_sdk/src/features/autoMasking/auto_masking_class.dart'
     as _i2;
 import 'package:decibel_sdk/src/features/autoMasking/auto_masking_enums.dart'
-    as _i16;
-import 'package:decibel_sdk/src/features/frame_tracking.dart' as _i20;
-import 'package:decibel_sdk/src/features/manual_analytics/goals_and_dimensions.dart'
     as _i17;
-import 'package:decibel_sdk/src/features/manual_analytics/http_errors.dart'
+import 'package:decibel_sdk/src/features/frame_tracking.dart' as _i21;
+import 'package:decibel_sdk/src/features/manual_analytics/goals_and_dimensions.dart'
     as _i18;
+import 'package:decibel_sdk/src/features/manual_analytics/http_errors.dart'
+    as _i19;
 import 'package:decibel_sdk/src/features/session_replay.dart' as _i3;
 import 'package:decibel_sdk/src/features/tracking/screen_visited.dart' as _i12;
 import 'package:decibel_sdk/src/features/tracking/tracking.dart' as _i8;
-import 'package:decibel_sdk/src/messages.dart' as _i14;
-import 'package:decibel_sdk/src/utility/enums.dart' as _i15;
-import 'package:decibel_sdk/src/utility/logger_sdk.dart' as _i19;
-import 'package:decibel_sdk/src/utility/placeholder_image.dart' as _i21;
-import 'package:flutter/foundation.dart' as _i13;
+import 'package:decibel_sdk/src/messages.dart' as _i15;
+import 'package:decibel_sdk/src/utility/enums.dart' as _i16;
+import 'package:decibel_sdk/src/utility/logger_sdk.dart' as _i20;
+import 'package:decibel_sdk/src/utility/placeholder_image.dart' as _i22;
+import 'package:decibel_sdk/src/utility/route_observer.dart' as _i13;
+import 'package:flutter/foundation.dart' as _i14;
 import 'package:flutter/material.dart' as _i4;
 import 'package:flutter/scheduler.dart' as _i5;
 import 'package:logger/logger.dart' as _i7;
@@ -189,9 +190,20 @@ class _FakeScreenVisited_13 extends _i1.SmartFake
         );
 }
 
-class _FakeGlobalKey_14<T extends _i4.State<_i4.StatefulWidget>>
+class _FakeRouteObserverOtherNavigators_14 extends _i1.SmartFake
+    implements _i13.RouteObserverOtherNavigators {
+  _FakeRouteObserverOtherNavigators_14(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeGlobalKey_15<T extends _i4.State<_i4.StatefulWidget>>
     extends _i1.SmartFake implements _i4.GlobalKey<T> {
-  _FakeGlobalKey_14(
+  _FakeGlobalKey_15(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -200,8 +212,8 @@ class _FakeGlobalKey_14<T extends _i4.State<_i4.StatefulWidget>>
         );
 }
 
-class _FakeWidget_15 extends _i1.SmartFake implements _i4.Widget {
-  _FakeWidget_15(
+class _FakeWidget_16 extends _i1.SmartFake implements _i4.Widget {
+  _FakeWidget_16(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -211,13 +223,13 @@ class _FakeWidget_15 extends _i1.SmartFake implements _i4.Widget {
 
   @override
   String toString(
-          {_i13.DiagnosticLevel? minLevel = _i13.DiagnosticLevel.info}) =>
+          {_i14.DiagnosticLevel? minLevel = _i14.DiagnosticLevel.info}) =>
       super.toString();
 }
 
-class _FakeInheritedWidget_16 extends _i1.SmartFake
+class _FakeInheritedWidget_17 extends _i1.SmartFake
     implements _i4.InheritedWidget {
-  _FakeInheritedWidget_16(
+  _FakeInheritedWidget_17(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -227,13 +239,13 @@ class _FakeInheritedWidget_16 extends _i1.SmartFake
 
   @override
   String toString(
-          {_i13.DiagnosticLevel? minLevel = _i13.DiagnosticLevel.info}) =>
+          {_i14.DiagnosticLevel? minLevel = _i14.DiagnosticLevel.info}) =>
       super.toString();
 }
 
-class _FakeDiagnosticsNode_17 extends _i1.SmartFake
-    implements _i13.DiagnosticsNode {
-  _FakeDiagnosticsNode_17(
+class _FakeDiagnosticsNode_18 extends _i1.SmartFake
+    implements _i14.DiagnosticsNode {
+  _FakeDiagnosticsNode_18(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -243,14 +255,14 @@ class _FakeDiagnosticsNode_17 extends _i1.SmartFake
 
   @override
   String toString({
-    _i13.TextTreeConfiguration? parentConfiguration,
-    _i13.DiagnosticLevel? minLevel = _i13.DiagnosticLevel.info,
+    _i14.TextTreeConfiguration? parentConfiguration,
+    _i14.DiagnosticLevel? minLevel = _i14.DiagnosticLevel.info,
   }) =>
       super.toString();
 }
 
-class _FakeDuration_18 extends _i1.SmartFake implements Duration {
-  _FakeDuration_18(
+class _FakeDuration_19 extends _i1.SmartFake implements Duration {
+  _FakeDuration_19(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -259,9 +271,9 @@ class _FakeDuration_18 extends _i1.SmartFake implements Duration {
         );
 }
 
-class _FakeSingletonFlutterWindow_19 extends _i1.SmartFake
+class _FakeSingletonFlutterWindow_20 extends _i1.SmartFake
     implements _i11.SingletonFlutterWindow {
-  _FakeSingletonFlutterWindow_19(
+  _FakeSingletonFlutterWindow_20(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -270,9 +282,9 @@ class _FakeSingletonFlutterWindow_19 extends _i1.SmartFake
         );
 }
 
-class _FakePlatformDispatcher_20 extends _i1.SmartFake
+class _FakePlatformDispatcher_21 extends _i1.SmartFake
     implements _i11.PlatformDispatcher {
-  _FakePlatformDispatcher_20(
+  _FakePlatformDispatcher_21(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -285,9 +297,9 @@ class _FakePlatformDispatcher_20 extends _i1.SmartFake
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockMedalliaDxaNativeApi extends _i1.Mock
-    implements _i14.MedalliaDxaNativeApi {
+    implements _i15.MedalliaDxaNativeApi {
   @override
-  _i6.Future<void> initialize(_i14.SessionMessage? arg_msg) =>
+  _i6.Future<void> initialize(_i15.SessionMessage? arg_msg) =>
       (super.noSuchMethod(
         Invocation.method(
           #initialize,
@@ -297,7 +309,7 @@ class MockMedalliaDxaNativeApi extends _i1.Mock
         returnValueForMissingStub: _i6.Future<void>.value(),
       ) as _i6.Future<void>);
   @override
-  _i6.Future<void> startScreen(_i14.StartScreenMessage? arg_msg) =>
+  _i6.Future<void> startScreen(_i15.StartScreenMessage? arg_msg) =>
       (super.noSuchMethod(
         Invocation.method(
           #startScreen,
@@ -307,7 +319,7 @@ class MockMedalliaDxaNativeApi extends _i1.Mock
         returnValueForMissingStub: _i6.Future<void>.value(),
       ) as _i6.Future<void>);
   @override
-  _i6.Future<void> endScreen(_i14.EndScreenMessage? arg_msg) =>
+  _i6.Future<void> endScreen(_i15.EndScreenMessage? arg_msg) =>
       (super.noSuchMethod(
         Invocation.method(
           #endScreen,
@@ -317,7 +329,7 @@ class MockMedalliaDxaNativeApi extends _i1.Mock
         returnValueForMissingStub: _i6.Future<void>.value(),
       ) as _i6.Future<void>);
   @override
-  _i6.Future<void> setEnableConsents(_i14.ConsentsMessage? arg_msg) =>
+  _i6.Future<void> setEnableConsents(_i15.ConsentsMessage? arg_msg) =>
       (super.noSuchMethod(
         Invocation.method(
           #setEnableConsents,
@@ -327,7 +339,7 @@ class MockMedalliaDxaNativeApi extends _i1.Mock
         returnValueForMissingStub: _i6.Future<void>.value(),
       ) as _i6.Future<void>);
   @override
-  _i6.Future<void> setDisableConsents(_i14.ConsentsMessage? arg_msg) =>
+  _i6.Future<void> setDisableConsents(_i15.ConsentsMessage? arg_msg) =>
       (super.noSuchMethod(
         Invocation.method(
           #setDisableConsents,
@@ -337,7 +349,7 @@ class MockMedalliaDxaNativeApi extends _i1.Mock
         returnValueForMissingStub: _i6.Future<void>.value(),
       ) as _i6.Future<void>);
   @override
-  _i6.Future<void> saveScreenshot(_i14.ScreenshotMessage? arg_msg) =>
+  _i6.Future<void> saveScreenshot(_i15.ScreenshotMessage? arg_msg) =>
       (super.noSuchMethod(
         Invocation.method(
           #saveScreenshot,
@@ -348,7 +360,7 @@ class MockMedalliaDxaNativeApi extends _i1.Mock
       ) as _i6.Future<void>);
   @override
   _i6.Future<void> sendDimensionWithString(
-          _i14.DimensionStringMessage? arg_msg) =>
+          _i15.DimensionStringMessage? arg_msg) =>
       (super.noSuchMethod(
         Invocation.method(
           #sendDimensionWithString,
@@ -359,7 +371,7 @@ class MockMedalliaDxaNativeApi extends _i1.Mock
       ) as _i6.Future<void>);
   @override
   _i6.Future<void> sendDimensionWithNumber(
-          _i14.DimensionNumberMessage? arg_msg) =>
+          _i15.DimensionNumberMessage? arg_msg) =>
       (super.noSuchMethod(
         Invocation.method(
           #sendDimensionWithNumber,
@@ -369,7 +381,7 @@ class MockMedalliaDxaNativeApi extends _i1.Mock
         returnValueForMissingStub: _i6.Future<void>.value(),
       ) as _i6.Future<void>);
   @override
-  _i6.Future<void> sendDimensionWithBool(_i14.DimensionBoolMessage? arg_msg) =>
+  _i6.Future<void> sendDimensionWithBool(_i15.DimensionBoolMessage? arg_msg) =>
       (super.noSuchMethod(
         Invocation.method(
           #sendDimensionWithBool,
@@ -379,7 +391,7 @@ class MockMedalliaDxaNativeApi extends _i1.Mock
         returnValueForMissingStub: _i6.Future<void>.value(),
       ) as _i6.Future<void>);
   @override
-  _i6.Future<void> sendGoal(_i14.GoalMessage? arg_msg) => (super.noSuchMethod(
+  _i6.Future<void> sendGoal(_i15.GoalMessage? arg_msg) => (super.noSuchMethod(
         Invocation.method(
           #sendGoal,
           [arg_msg],
@@ -470,12 +482,6 @@ class MockMedalliaDxaNativeApi extends _i1.Mock
 /// See the documentation for Mockito's code generation for more information.
 class MockMedalliaDxaConfig extends _i1.Mock implements _i10.MedalliaDxaConfig {
   @override
-  List<_i4.NavigatorObserver> get currentRouteObservers => (super.noSuchMethod(
-        Invocation.getter(#currentRouteObservers),
-        returnValue: <_i4.NavigatorObserver>[],
-        returnValueForMissingStub: <_i4.NavigatorObserver>[],
-      ) as List<_i4.NavigatorObserver>);
-  @override
   bool get initialized => (super.noSuchMethod(
         Invocation.getter(#initialized),
         returnValue: false,
@@ -489,6 +495,12 @@ class MockMedalliaDxaConfig extends _i1.Mock implements _i10.MedalliaDxaConfig {
         ),
         returnValueForMissingStub: null,
       );
+  @override
+  List<_i4.NavigatorObserver> get currentRouteObservers => (super.noSuchMethod(
+        Invocation.getter(#currentRouteObservers),
+        returnValue: <_i4.NavigatorObserver>[],
+        returnValueForMissingStub: <_i4.NavigatorObserver>[],
+      ) as List<_i4.NavigatorObserver>);
   @override
   bool get recordingAllowed => (super.noSuchMethod(
         Invocation.getter(#recordingAllowed),
@@ -513,7 +525,7 @@ class MockMedalliaDxaConfig extends _i1.Mock implements _i10.MedalliaDxaConfig {
   _i6.Future<void> initialize(
     int? account,
     int? property,
-    List<_i15.DecibelCustomerConsentType>? consents,
+    List<_i16.DecibelCustomerConsentType>? consents,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -529,7 +541,7 @@ class MockMedalliaDxaConfig extends _i1.Mock implements _i10.MedalliaDxaConfig {
       ) as _i6.Future<void>);
   @override
   _i6.Future<void> setEnableConsents(
-          List<_i15.DecibelCustomerConsentType>? consents) =>
+          List<_i16.DecibelCustomerConsentType>? consents) =>
       (super.noSuchMethod(
         Invocation.method(
           #setEnableConsents,
@@ -540,7 +552,7 @@ class MockMedalliaDxaConfig extends _i1.Mock implements _i10.MedalliaDxaConfig {
       ) as _i6.Future<void>);
   @override
   _i6.Future<void> setDisableConsents(
-          List<_i15.DecibelCustomerConsentType>? consents) =>
+          List<_i16.DecibelCustomerConsentType>? consents) =>
       (super.noSuchMethod(
         Invocation.method(
           #setDisableConsents,
@@ -621,7 +633,7 @@ class MockMedalliaDxaConfig extends _i1.Mock implements _i10.MedalliaDxaConfig {
         returnValueForMissingStub: _i6.Future<String?>.value(),
       ) as _i6.Future<String?>);
   @override
-  void setAutoMasking(Set<_i16.AutoMaskingTypeEnum>? widgetsToMask) =>
+  void setAutoMasking(Set<_i17.AutoMaskingTypeEnum>? widgetsToMask) =>
       super.noSuchMethod(
         Invocation.method(
           #setAutoMasking,
@@ -630,7 +642,7 @@ class MockMedalliaDxaConfig extends _i1.Mock implements _i10.MedalliaDxaConfig {
         returnValueForMissingStub: null,
       );
   @override
-  void disableAutoMasking(Set<_i16.AutoMaskingTypeEnum>? widgetsToUnmask) =>
+  void disableAutoMasking(Set<_i17.AutoMaskingTypeEnum>? widgetsToUnmask) =>
       super.noSuchMethod(
         Invocation.method(
           #disableAutoMasking,
@@ -810,7 +822,7 @@ class MockSessionReplay extends _i1.Mock implements _i3.SessionReplay {
         returnValueForMissingStub: null,
       );
   @override
-  set lastScreenshotSent(_i14.ScreenshotMessage? _lastScreenshotSent) =>
+  set lastScreenshotSent(_i15.ScreenshotMessage? _lastScreenshotSent) =>
       super.noSuchMethod(
         Invocation.setter(
           #lastScreenshotSent,
@@ -916,7 +928,7 @@ class MockSessionReplay extends _i1.Mock implements _i3.SessionReplay {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGoalsAndDimensions extends _i1.Mock
-    implements _i17.GoalsAndDimensions {
+    implements _i18.GoalsAndDimensions {
   @override
   _i8.Tracking get tracking => (super.noSuchMethod(
         Invocation.getter(#tracking),
@@ -1106,13 +1118,13 @@ class MockAutoMasking extends _i1.Mock implements _i2.AutoMasking {
         ),
       ) as _i7.Logger);
   @override
-  Set<_i16.AutoMaskingType> get autoMaskingTypeSet => (super.noSuchMethod(
+  Set<_i17.AutoMaskingType> get autoMaskingTypeSet => (super.noSuchMethod(
         Invocation.getter(#autoMaskingTypeSet),
-        returnValue: <_i16.AutoMaskingType>{},
-        returnValueForMissingStub: <_i16.AutoMaskingType>{},
-      ) as Set<_i16.AutoMaskingType>);
+        returnValue: <_i17.AutoMaskingType>{},
+        returnValueForMissingStub: <_i17.AutoMaskingType>{},
+      ) as Set<_i17.AutoMaskingType>);
   @override
-  set autoMaskingTypeSet(Set<_i16.AutoMaskingType>? value) =>
+  set autoMaskingTypeSet(Set<_i17.AutoMaskingType>? value) =>
       super.noSuchMethod(
         Invocation.setter(
           #autoMaskingTypeSet,
@@ -1122,7 +1134,7 @@ class MockAutoMasking extends _i1.Mock implements _i2.AutoMasking {
       );
   @override
   void removeUnmaskedTypesFromAutoMaskingTypeSet(
-          Set<_i16.AutoMaskingType>? set) =>
+          Set<_i17.AutoMaskingType>? set) =>
       super.noSuchMethod(
         Invocation.method(
           #removeUnmaskedTypesFromAutoMaskingTypeSet,
@@ -1149,7 +1161,7 @@ class MockAutoMasking extends _i1.Mock implements _i2.AutoMasking {
   @override
   Set<_i4.RenderObject> getRenderObjectsByAutoMaskingType(
     _i4.BuildContext? context,
-    Set<_i16.AutoMaskingType>? widgetTypes,
+    Set<_i17.AutoMaskingType>? widgetTypes,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1167,7 +1179,7 @@ class MockAutoMasking extends _i1.Mock implements _i2.AutoMasking {
 /// A class which mocks [HttpErrors].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockHttpErrors extends _i1.Mock implements _i18.HttpErrors {
+class MockHttpErrors extends _i1.Mock implements _i19.HttpErrors {
   @override
   _i8.Tracking get tracking => (super.noSuchMethod(
         Invocation.getter(#tracking),
@@ -1284,7 +1296,7 @@ class MockHttpErrors extends _i1.Mock implements _i18.HttpErrors {
 /// A class which mocks [LoggerSDK].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLoggerSDK extends _i1.Mock implements _i19.LoggerSDK {
+class MockLoggerSDK extends _i1.Mock implements _i20.LoggerSDK {
   @override
   bool get enabled => (super.noSuchMethod(
         Invocation.getter(#enabled),
@@ -1550,7 +1562,7 @@ class MockLoggerSDK extends _i1.Mock implements _i19.LoggerSDK {
 /// A class which mocks [FrameTracking].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockFrameTracking extends _i1.Mock implements _i20.FrameTracking {
+class MockFrameTracking extends _i1.Mock implements _i21.FrameTracking {
   @override
   void Function(void Function(Duration)) get postFrameCallback =>
       (super.noSuchMethod(
@@ -1611,22 +1623,22 @@ class MockFrameTracking extends _i1.Mock implements _i20.FrameTracking {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockPlaceholderImageConfig extends _i1.Mock
-    implements _i21.PlaceholderImageConfig {
+    implements _i22.PlaceholderImageConfig {
   @override
-  _i9.HashMap<_i11.Size, _i22.ByteData> get placeholderImageByteDataMap =>
+  _i9.HashMap<_i11.Size, _i23.ByteData> get placeholderImageByteDataMap =>
       (super.noSuchMethod(
         Invocation.getter(#placeholderImageByteDataMap),
-        returnValue: _FakeHashMap_10<_i11.Size, _i22.ByteData>(
+        returnValue: _FakeHashMap_10<_i11.Size, _i23.ByteData>(
           this,
           Invocation.getter(#placeholderImageByteDataMap),
         ),
-        returnValueForMissingStub: _FakeHashMap_10<_i11.Size, _i22.ByteData>(
+        returnValueForMissingStub: _FakeHashMap_10<_i11.Size, _i23.ByteData>(
           this,
           Invocation.getter(#placeholderImageByteDataMap),
         ),
-      ) as _i9.HashMap<_i11.Size, _i22.ByteData>);
+      ) as _i9.HashMap<_i11.Size, _i23.ByteData>);
   @override
-  set placeHolderIcon(_i22.ByteData? _placeHolderIcon) => super.noSuchMethod(
+  set placeHolderIcon(_i23.ByteData? _placeHolderIcon) => super.noSuchMethod(
         Invocation.setter(
           #placeHolderIcon,
           _placeHolderIcon,
@@ -1634,9 +1646,9 @@ class MockPlaceholderImageConfig extends _i1.Mock
         returnValueForMissingStub: null,
       );
   @override
-  _i6.FutureOr<_i22.ByteData> getPlaceholderImage(
+  _i6.FutureOr<_i23.ByteData> getPlaceholderImage(
     _i4.BuildContext? context,
-    _i21.PlaceholderType? placeholderType,
+    _i22.PlaceholderType? placeholderType,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1646,10 +1658,10 @@ class MockPlaceholderImageConfig extends _i1.Mock
             placeholderType,
           ],
         ),
-        returnValue: _i6.Future<_i22.ByteData>.value(_i22.ByteData(0)),
+        returnValue: _i6.Future<_i23.ByteData>.value(_i23.ByteData(0)),
         returnValueForMissingStub:
-            _i6.Future<_i22.ByteData>.value(_i22.ByteData(0)),
-      ) as _i6.FutureOr<_i22.ByteData>);
+            _i6.Future<_i23.ByteData>.value(_i23.ByteData(0)),
+      ) as _i6.FutureOr<_i23.ByteData>);
 }
 
 /// A class which mocks [Tracking].
@@ -2105,6 +2117,139 @@ class MockTracking extends _i1.Mock implements _i8.Tracking {
       ) as bool);
 }
 
+/// A class which mocks [CustomRouteObserver].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockCustomRouteObserver extends _i1.Mock
+    implements _i13.CustomRouteObserver {
+  @override
+  Map<_i4.Route<dynamic>, Set<_i4.RouteAware>>
+      get routesAScreenWidgetHasSubscribedTo => (super.noSuchMethod(
+            Invocation.getter(#routesAScreenWidgetHasSubscribedTo),
+            returnValue: <_i4.Route<dynamic>, Set<_i4.RouteAware>>{},
+            returnValueForMissingStub: <_i4.Route<dynamic>,
+                Set<_i4.RouteAware>>{},
+          ) as Map<_i4.Route<dynamic>, Set<_i4.RouteAware>>);
+  @override
+  _i13.RouteObserverOtherNavigators get routeObserverOtherNavigators =>
+      (super.noSuchMethod(
+        Invocation.getter(#routeObserverOtherNavigators),
+        returnValue: _FakeRouteObserverOtherNavigators_14(
+          this,
+          Invocation.getter(#routeObserverOtherNavigators),
+        ),
+        returnValueForMissingStub: _FakeRouteObserverOtherNavigators_14(
+          this,
+          Invocation.getter(#routeObserverOtherNavigators),
+        ),
+      ) as _i13.RouteObserverOtherNavigators);
+  @override
+  set rootRoute(_i4.Route<dynamic>? _rootRoute) => super.noSuchMethod(
+        Invocation.setter(
+          #rootRoute,
+          _rootRoute,
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  bool get rootNotFound => (super.noSuchMethod(
+        Invocation.getter(#rootNotFound),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  set rootNotFound(bool? _rootNotFound) => super.noSuchMethod(
+        Invocation.setter(
+          #rootNotFound,
+          _rootNotFound,
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  List<_i4.RouteObserver<_i4.Route<dynamic>>> getNewObservers() =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getNewObservers,
+          [],
+        ),
+        returnValue: <_i4.RouteObserver<_i4.Route<dynamic>>>[],
+        returnValueForMissingStub: <_i4.RouteObserver<_i4.Route<dynamic>>>[],
+      ) as List<_i4.RouteObserver<_i4.Route<dynamic>>>);
+  @override
+  _i4.RouteObserver<_i4.Route<dynamic>>? observerToSubscribeFromWidget(
+    _i4.NavigatorState? widgetNavigator, {
+    bool? isScreenWidget = false,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #observerToSubscribeFromWidget,
+          [widgetNavigator],
+          {#isScreenWidget: isScreenWidget},
+        ),
+        returnValueForMissingStub: null,
+      ) as _i4.RouteObserver<_i4.Route<dynamic>>?);
+  @override
+  bool isThisObserverUsedInAWidget(_i4.NavigatorObserver? observer) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #isThisObserverUsedInAWidget,
+          [observer],
+        ),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  void removeObserverFromObserversForWidgetDispatchList(
+          _i4.RouteObserver<_i4.Route<dynamic>>? observer) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #removeObserverFromObserversForWidgetDispatchList,
+          [observer],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void thisWidgetHasSubscribedToThisRoute(
+    _i4.RouteAware? widget,
+    _i4.Route<dynamic>? route,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #thisWidgetHasSubscribedToThisRoute,
+          [
+            widget,
+            route,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void thisWidgetHasUnsubscribedToThisRoute(
+    _i4.RouteAware? widget,
+    _i4.Route<dynamic>? route,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #thisWidgetHasUnsubscribedToThisRoute,
+          [
+            widget,
+            route,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  bool hasAWidgetSubscribedToThisRoute(_i4.Route<dynamic>? route) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #hasAWidgetSubscribedToThisRoute,
+          [route],
+        ),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+}
+
 /// A class which mocks [ScreenVisited].
 ///
 /// See the documentation for Mockito's code generation for more information.
@@ -2138,12 +2283,12 @@ class MockScreenVisited extends _i1.Mock implements _i12.ScreenVisited {
   _i4.GlobalKey<_i4.State<_i4.StatefulWidget>> get captureKey =>
       (super.noSuchMethod(
         Invocation.getter(#captureKey),
-        returnValue: _FakeGlobalKey_14<_i4.State<_i4.StatefulWidget>>(
+        returnValue: _FakeGlobalKey_15<_i4.State<_i4.StatefulWidget>>(
           this,
           Invocation.getter(#captureKey),
         ),
         returnValueForMissingStub:
-            _FakeGlobalKey_14<_i4.State<_i4.StatefulWidget>>(
+            _FakeGlobalKey_15<_i4.State<_i4.StatefulWidget>>(
           this,
           Invocation.getter(#captureKey),
         ),
@@ -2439,11 +2584,11 @@ class MockBuildContext extends _i1.Mock implements _i4.BuildContext {
   @override
   _i4.Widget get widget => (super.noSuchMethod(
         Invocation.getter(#widget),
-        returnValue: _FakeWidget_15(
+        returnValue: _FakeWidget_16(
           this,
           Invocation.getter(#widget),
         ),
-        returnValueForMissingStub: _FakeWidget_15(
+        returnValueForMissingStub: _FakeWidget_16(
           this,
           Invocation.getter(#widget),
         ),
@@ -2471,7 +2616,7 @@ class MockBuildContext extends _i1.Mock implements _i4.BuildContext {
           [ancestor],
           {#aspect: aspect},
         ),
-        returnValue: _FakeInheritedWidget_16(
+        returnValue: _FakeInheritedWidget_17(
           this,
           Invocation.method(
             #dependOnInheritedElement,
@@ -2479,7 +2624,7 @@ class MockBuildContext extends _i1.Mock implements _i4.BuildContext {
             {#aspect: aspect},
           ),
         ),
-        returnValueForMissingStub: _FakeInheritedWidget_16(
+        returnValueForMissingStub: _FakeInheritedWidget_17(
           this,
           Invocation.method(
             #dependOnInheritedElement,
@@ -2515,9 +2660,9 @@ class MockBuildContext extends _i1.Mock implements _i4.BuildContext {
         returnValueForMissingStub: null,
       );
   @override
-  _i13.DiagnosticsNode describeElement(
+  _i14.DiagnosticsNode describeElement(
     String? name, {
-    _i13.DiagnosticsTreeStyle? style = _i13.DiagnosticsTreeStyle.errorProperty,
+    _i14.DiagnosticsTreeStyle? style = _i14.DiagnosticsTreeStyle.errorProperty,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -2525,7 +2670,7 @@ class MockBuildContext extends _i1.Mock implements _i4.BuildContext {
           [name],
           {#style: style},
         ),
-        returnValue: _FakeDiagnosticsNode_17(
+        returnValue: _FakeDiagnosticsNode_18(
           this,
           Invocation.method(
             #describeElement,
@@ -2533,7 +2678,7 @@ class MockBuildContext extends _i1.Mock implements _i4.BuildContext {
             {#style: style},
           ),
         ),
-        returnValueForMissingStub: _FakeDiagnosticsNode_17(
+        returnValueForMissingStub: _FakeDiagnosticsNode_18(
           this,
           Invocation.method(
             #describeElement,
@@ -2541,11 +2686,11 @@ class MockBuildContext extends _i1.Mock implements _i4.BuildContext {
             {#style: style},
           ),
         ),
-      ) as _i13.DiagnosticsNode);
+      ) as _i14.DiagnosticsNode);
   @override
-  _i13.DiagnosticsNode describeWidget(
+  _i14.DiagnosticsNode describeWidget(
     String? name, {
-    _i13.DiagnosticsTreeStyle? style = _i13.DiagnosticsTreeStyle.errorProperty,
+    _i14.DiagnosticsTreeStyle? style = _i14.DiagnosticsTreeStyle.errorProperty,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -2553,7 +2698,7 @@ class MockBuildContext extends _i1.Mock implements _i4.BuildContext {
           [name],
           {#style: style},
         ),
-        returnValue: _FakeDiagnosticsNode_17(
+        returnValue: _FakeDiagnosticsNode_18(
           this,
           Invocation.method(
             #describeWidget,
@@ -2561,7 +2706,7 @@ class MockBuildContext extends _i1.Mock implements _i4.BuildContext {
             {#style: style},
           ),
         ),
-        returnValueForMissingStub: _FakeDiagnosticsNode_17(
+        returnValueForMissingStub: _FakeDiagnosticsNode_18(
           this,
           Invocation.method(
             #describeWidget,
@@ -2569,9 +2714,9 @@ class MockBuildContext extends _i1.Mock implements _i4.BuildContext {
             {#style: style},
           ),
         ),
-      ) as _i13.DiagnosticsNode);
+      ) as _i14.DiagnosticsNode);
   @override
-  List<_i13.DiagnosticsNode> describeMissingAncestor(
+  List<_i14.DiagnosticsNode> describeMissingAncestor(
           {required Type? expectedAncestorType}) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -2579,31 +2724,31 @@ class MockBuildContext extends _i1.Mock implements _i4.BuildContext {
           [],
           {#expectedAncestorType: expectedAncestorType},
         ),
-        returnValue: <_i13.DiagnosticsNode>[],
-        returnValueForMissingStub: <_i13.DiagnosticsNode>[],
-      ) as List<_i13.DiagnosticsNode>);
+        returnValue: <_i14.DiagnosticsNode>[],
+        returnValueForMissingStub: <_i14.DiagnosticsNode>[],
+      ) as List<_i14.DiagnosticsNode>);
   @override
-  _i13.DiagnosticsNode describeOwnershipChain(String? name) =>
+  _i14.DiagnosticsNode describeOwnershipChain(String? name) =>
       (super.noSuchMethod(
         Invocation.method(
           #describeOwnershipChain,
           [name],
         ),
-        returnValue: _FakeDiagnosticsNode_17(
+        returnValue: _FakeDiagnosticsNode_18(
           this,
           Invocation.method(
             #describeOwnershipChain,
             [name],
           ),
         ),
-        returnValueForMissingStub: _FakeDiagnosticsNode_17(
+        returnValueForMissingStub: _FakeDiagnosticsNode_18(
           this,
           Invocation.method(
             #describeOwnershipChain,
             [name],
           ),
         ),
-      ) as _i13.DiagnosticsNode);
+      ) as _i14.DiagnosticsNode);
 }
 
 /// A class which mocks [SchedulerBinding].
@@ -2666,11 +2811,11 @@ class MockSchedulerBinding extends _i1.Mock implements _i5.SchedulerBinding {
   @override
   Duration get currentFrameTimeStamp => (super.noSuchMethod(
         Invocation.getter(#currentFrameTimeStamp),
-        returnValue: _FakeDuration_18(
+        returnValue: _FakeDuration_19(
           this,
           Invocation.getter(#currentFrameTimeStamp),
         ),
-        returnValueForMissingStub: _FakeDuration_18(
+        returnValueForMissingStub: _FakeDuration_19(
           this,
           Invocation.getter(#currentFrameTimeStamp),
         ),
@@ -2678,11 +2823,11 @@ class MockSchedulerBinding extends _i1.Mock implements _i5.SchedulerBinding {
   @override
   Duration get currentSystemFrameTimeStamp => (super.noSuchMethod(
         Invocation.getter(#currentSystemFrameTimeStamp),
-        returnValue: _FakeDuration_18(
+        returnValue: _FakeDuration_19(
           this,
           Invocation.getter(#currentSystemFrameTimeStamp),
         ),
-        returnValueForMissingStub: _FakeDuration_18(
+        returnValueForMissingStub: _FakeDuration_19(
           this,
           Invocation.getter(#currentSystemFrameTimeStamp),
         ),
@@ -2690,11 +2835,11 @@ class MockSchedulerBinding extends _i1.Mock implements _i5.SchedulerBinding {
   @override
   _i11.SingletonFlutterWindow get window => (super.noSuchMethod(
         Invocation.getter(#window),
-        returnValue: _FakeSingletonFlutterWindow_19(
+        returnValue: _FakeSingletonFlutterWindow_20(
           this,
           Invocation.getter(#window),
         ),
-        returnValueForMissingStub: _FakeSingletonFlutterWindow_19(
+        returnValueForMissingStub: _FakeSingletonFlutterWindow_20(
           this,
           Invocation.getter(#window),
         ),
@@ -2702,11 +2847,11 @@ class MockSchedulerBinding extends _i1.Mock implements _i5.SchedulerBinding {
   @override
   _i11.PlatformDispatcher get platformDispatcher => (super.noSuchMethod(
         Invocation.getter(#platformDispatcher),
-        returnValue: _FakePlatformDispatcher_20(
+        returnValue: _FakePlatformDispatcher_21(
           this,
           Invocation.getter(#platformDispatcher),
         ),
-        returnValueForMissingStub: _FakePlatformDispatcher_20(
+        returnValueForMissingStub: _FakePlatformDispatcher_21(
           this,
           Invocation.getter(#platformDispatcher),
         ),
@@ -2764,7 +2909,7 @@ class MockSchedulerBinding extends _i1.Mock implements _i5.SchedulerBinding {
     _i5.TaskCallback<T>? task,
     _i5.Priority? priority, {
     String? debugLabel,
-    _i23.Flow? flow,
+    _i24.Flow? flow,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -2996,7 +3141,7 @@ class MockSchedulerBinding extends _i1.Mock implements _i5.SchedulerBinding {
   @override
   void registerSignalServiceExtension({
     required String? name,
-    required _i13.AsyncCallback? callback,
+    required _i14.AsyncCallback? callback,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -3012,8 +3157,8 @@ class MockSchedulerBinding extends _i1.Mock implements _i5.SchedulerBinding {
   @override
   void registerBoolServiceExtension({
     required String? name,
-    required _i13.AsyncValueGetter<bool>? getter,
-    required _i13.AsyncValueSetter<bool>? setter,
+    required _i14.AsyncValueGetter<bool>? getter,
+    required _i14.AsyncValueSetter<bool>? setter,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -3030,8 +3175,8 @@ class MockSchedulerBinding extends _i1.Mock implements _i5.SchedulerBinding {
   @override
   void registerNumericServiceExtension({
     required String? name,
-    required _i13.AsyncValueGetter<double>? getter,
-    required _i13.AsyncValueSetter<double>? setter,
+    required _i14.AsyncValueGetter<double>? getter,
+    required _i14.AsyncValueSetter<double>? setter,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -3063,8 +3208,8 @@ class MockSchedulerBinding extends _i1.Mock implements _i5.SchedulerBinding {
   @override
   void registerStringServiceExtension({
     required String? name,
-    required _i13.AsyncValueGetter<String>? getter,
-    required _i13.AsyncValueSetter<String>? setter,
+    required _i14.AsyncValueGetter<String>? getter,
+    required _i14.AsyncValueSetter<String>? setter,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -3081,7 +3226,7 @@ class MockSchedulerBinding extends _i1.Mock implements _i5.SchedulerBinding {
   @override
   void registerServiceExtension({
     required String? name,
-    required _i13.ServiceExtensionCallback? callback,
+    required _i14.ServiceExtensionCallback? callback,
   }) =>
       super.noSuchMethod(
         Invocation.method(

@@ -6,6 +6,7 @@ import 'package:decibel_sdk/src/features/tracking/tracking.dart';
 import 'package:decibel_sdk/src/messages.dart';
 import 'package:decibel_sdk/src/utility/logger_sdk.dart';
 import 'package:decibel_sdk/src/utility/placeholder_image.dart';
+import 'package:decibel_sdk/src/utility/route_observer.dart';
 
 class DependencyInjector {
   factory DependencyInjector({
@@ -17,17 +18,18 @@ class DependencyInjector {
     required PlaceholderImageConfig placeholderImageConfig,
     required FrameTracking frameTracking,
     required MedalliaDxaNativeApi nativeApi,
+    required CustomRouteObserver customRouteObserver,
   }) {
     return _instance = DependencyInjector._(
-      config: config,
-      tracking: tracking,
-      sessionReplay: sessionReplay,
-      loggerSdk: loggerSdk,
-      autoMasking: autoMasking,
-      placeholderImageConfig: placeholderImageConfig,
-      frameTracking: frameTracking,
-      nativeApi: nativeApi,
-    );
+        config: config,
+        tracking: tracking,
+        sessionReplay: sessionReplay,
+        loggerSdk: loggerSdk,
+        autoMasking: autoMasking,
+        placeholderImageConfig: placeholderImageConfig,
+        frameTracking: frameTracking,
+        nativeApi: nativeApi,
+        customRouteObserver: customRouteObserver);
   }
   DependencyInjector._({
     required this.config,
@@ -38,6 +40,7 @@ class DependencyInjector {
     required this.placeholderImageConfig,
     required this.frameTracking,
     required this.nativeApi,
+    required this.customRouteObserver,
   });
   static late DependencyInjector _instance;
 
@@ -51,4 +54,5 @@ class DependencyInjector {
   final PlaceholderImageConfig placeholderImageConfig;
   final FrameTracking frameTracking;
   final MedalliaDxaNativeApi nativeApi;
+  final CustomRouteObserver customRouteObserver;
 }

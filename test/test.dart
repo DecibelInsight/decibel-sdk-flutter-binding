@@ -9,6 +9,7 @@ import 'package:decibel_sdk/src/features/tracking/tracking.dart';
 import 'package:decibel_sdk/src/messages.dart';
 import 'package:decibel_sdk/src/utility/logger_sdk.dart';
 import 'package:decibel_sdk/src/utility/placeholder_image.dart';
+import 'package:decibel_sdk/src/utility/route_observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:logger/logger.dart';
@@ -30,6 +31,7 @@ import 'test_files/session_replay_test.dart' as session_replay_test;
   MockSpec<FrameTracking>(),
   MockSpec<PlaceholderImageConfig>(),
   MockSpec<Tracking>(),
+  MockSpec<CustomRouteObserver>(),
 
   MockSpec<ScreenVisited>(),
   //Third parties

@@ -39,6 +39,7 @@ void main() {
   late FakeWidgetsBinding fakeWidgetsBinding;
   late MockSchedulerBinding mockSchedulerBinding;
   late MockBuildContext mockBuildContext;
+  late MockCustomRouteObserver mockCustomRouteObserver;
 
   setUp(() {
     WidgetsFlutterBinding.ensureInitialized();
@@ -61,6 +62,7 @@ void main() {
     fakeWidgetsBinding = FakeWidgetsBinding();
     mockSchedulerBinding = MockSchedulerBinding();
     mockBuildContext = MockBuildContext();
+    mockCustomRouteObserver = MockCustomRouteObserver();
 
     sessionReplay = SessionReplay(
       mockMedalliaDxaConfig,
@@ -83,6 +85,7 @@ void main() {
       placeholderImageConfig: mockPlaceholderImageConfig,
       tracking: mockTracking,
       sessionReplay: sessionReplay,
+      customRouteObserver: mockCustomRouteObserver,
     );
     when(mockLoggerSDK.sessionReplayLogger).thenReturn(mockLogger);
 
